@@ -1,8 +1,13 @@
-import Login from "@/components/Login/Login";
+import CardEvents from "@/components/Events/CardEvents";
+import Events from "@/components/Events/Events";
+import React from "react";
 
-const Home: React.FC = () => {
-    return (
-     <div> my home </div>
-    )
-}
-export default Home;
+const page = () => {
+  return (
+    <div>
+      <Events />
+    </div>
+  );
+};
+
+export default page;
