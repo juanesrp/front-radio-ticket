@@ -28,6 +28,7 @@ const EventDetail = ({ event }: { event: IEvent }) => {
     e.preventDefault();
     setQuantity(quantity + 1);
   };
+
   return (
     <section className="pt-10 mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 max-w-6xl mx-5 md:mx-auto">
