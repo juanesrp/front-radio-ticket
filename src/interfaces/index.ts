@@ -4,7 +4,14 @@ export interface IEvent {
   description: string;
   image: string;
   date: string;
-  stock: number;
-  price: number;
-  localization: string;
+  category: {
+    id: number;
+    name: string;
+  };
+  tickets: {
+    id: number;
+    stock: number;
+    price: number;
+    zone: string;
+  }[];
 }

@@ -5,9 +5,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 2,
@@ -15,9 +30,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 2,
+      name: "Electronica",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 3,
@@ -25,9 +55,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 4,
@@ -35,9 +80,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 5,
@@ -45,9 +105,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 6,
@@ -55,9 +130,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 7,
@@ -65,9 +155,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 8,
@@ -75,9 +180,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 9,
@@ -85,9 +205,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 10,
@@ -95,9 +230,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 11,
@@ -105,9 +255,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 12,
@@ -115,9 +280,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 13,
@@ -125,9 +305,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 14,
@@ -135,9 +330,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 15,
@@ -145,9 +355,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 16,
@@ -155,9 +380,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 17,
@@ -165,9 +405,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 18,
@@ -175,9 +430,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 19,
@@ -185,9 +455,24 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
   {
     id: 20,
@@ -195,8 +480,23 @@ export const eventPreLoad = [
     description: "Descripción del evento",
     image: "https://picsum.photos/200/300",
     date: "16 de Junio",
-    stock: 1000,
-    price: 1000,
-    localization: "General",
+    category: {
+      id: 1,
+      name: "Reggaeton",
+    },
+    tickets: [
+      {
+        id: 1,
+        stock: 1000,
+        price: 1000,
+        zone: "General",
+      },
+      {
+        id: 2,
+        stock: 100,
+        price: 1500,
+        zone: "VIP",
+      },
+    ],
   },
 ];

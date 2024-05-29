@@ -1,4 +1,4 @@
-import CardEventDetail from "@/components/Events/CardEventDetail";
+import CardEventDetail from "@/components/Events/EventDetail/CardEventDetail";
 import { eventPreLoad } from "@/helpers/eventPreLoad";
 import React from "react";
 
