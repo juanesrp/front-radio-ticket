@@ -9,11 +9,11 @@ const CardEvents = (event: IEvent) => {
         <div className="flex justify-center">
           <img src={event.image} className="w-40" />
         </div>
-        <div className="flex flex-col items-center px-3">
-          <h1 className="text-lg font-bold text-center">
+        <div className="flex flex-col items-center px-3 py-3">
+          <h1 className="text-sm font-bold text-center">
             {event.date + " | " + event.name}
           </h1>
-          <h2 className="text-md text-center font-medium">
+          <h2 className="text-xs text-center font-medium">
             Desde ${event.tickets[0].price}
           </h2>
         </div>
