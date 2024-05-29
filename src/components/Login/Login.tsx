@@ -1,6 +1,19 @@
-import React from 'react';
+import { LoginErrorProps, LoginProps } from '@/interfaces/login';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 const Login: React.FC = () => {
+  const router = useRouter;
+
+  const loginData = {
+      email: '',
+      password: '',
+  };
+
+  const [dataUser, setDataUser] = useState<LoginProps>(loginData);
+    const [errorUser, setErrorUser] = useState<LoginErrorProps>(loginData);
+    const [showPassword, setShowPassword] = useState(false)
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full px-6 py-8 bg-white rounded-lg shadow-md">
