@@ -14,6 +14,7 @@ const Events = () => {
 
   // Obtener los eventos para la página actual
   const eventsToShow = events.slice(startIndex, endIndex);
+  console.log(startIndex, endIndex);
 
   // Manejar el cambio de página
   const handlePageChange = (pageNumber: number) => {
