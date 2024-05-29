@@ -8,16 +8,16 @@ const Login: React.FC = () => {
         <p className="text-gray-600 mb-2">Correo electrónico</p>
         <input
           type="email"
-          placeholder="Correo electrónico"
+          placeholder="example@gmail.com"
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
         />
         <p className="text-gray-600 mb-2">Contraseña</p>
         <input
           type="password"
-          placeholder="Contraseña"
+          placeholder="xxxxxxxxxxx"
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
         />
-        <button className="w-full py-2 mt-4 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-200">
+        <button className="w-full py-2 mt-4 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition duration-300">
           INICIAR SESIÓN
         </button>
         <div className="relative my-4">
