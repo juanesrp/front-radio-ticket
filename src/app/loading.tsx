@@ -14,7 +14,7 @@ const Loading = () => {
           <div className="w-10 h-10 bg-gray-300 rounded-full animate-bounce" />
           <div className="w-6 h-6 bg-gray-300 rounded-full mt-2 animate-bounce" />
         </div>
-        <div className="text-white text-lg font-semibold">Loading...</div>
+        <div className="text-white text-lg font-semibold">Cargando...</div>
       </motion.div>
     </div>
   );

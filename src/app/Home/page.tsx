@@ -1,11 +1,12 @@
 import CardEvents from "@/components/Events/CardEvents";
 import Events from "@/components/Events/Events";
+import Login from "@/components/Login/Login";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <Events />
+      <Login/>
     </div>
   );
 };
