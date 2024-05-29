@@ -107,10 +107,10 @@ export const Navbar = () => {
                   INICIO
                 </span>
               </Link>
-              <Link href={"/events"}>
+              <Link href={"/concerts"}>
                 <span
                   className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/Events"
+                    pathname === "/concerts"
                       ? "text-white border-b-[6px] border-red-500"
                       : ""
                   }`}
@@ -171,7 +171,7 @@ export const Navbar = () => {
 
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100" : "opacity-0 pointer-concerts-none"
         }`}
       >
         <div
@@ -187,7 +187,7 @@ export const Navbar = () => {
                 INICIO
               </span>
             </Link>
-            <Link href={"/events"}>
+            <Link href={"/concerts"}>
               <span className="hover:text-white transition duration-300">
                 PROXIMOS EVENTOS
               </span>

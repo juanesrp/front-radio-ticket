@@ -5,7 +5,7 @@ import Link from "next/link";
 const CardEvents = (event: IEvent) => {
   return (
     <div className="col-span-1 relative flex flex-col items-center bg-gray-100 hover:bg-gray-200">
-      <Link href={`/events/${event.id}`} className="p-6">
+      <Link href={`/concerts/${event.id}`} className="p-6">
         <div className="flex justify-center">
           <img src={event.image} className="w-40" />
         </div>
