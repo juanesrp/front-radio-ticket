@@ -9,13 +9,13 @@ export const getEvents = async (
   limit: number
 ): Promise<IEvent[]> => {
   try {
-    const res = await axios.get<IEvent[]>(`${api}/events`, {
+    const res = await axios.get(`${api}/events`, {
       params: {
         page,
         limit,
       },
     });
-    const events = res.data;
+    const events: IEvent[] = res.data.events;
     console.log("Estoy en el getEvents: ", events);
     return events;
   } catch (error: any) {
