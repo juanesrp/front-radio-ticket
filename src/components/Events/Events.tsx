@@ -14,6 +14,7 @@ const Events = () => {
   const fetchEvents = async (page: number) => {
     try {
       const events: IEvent[] = await getEvents(page, eventsPerPage);
+
       setEvents(events);
       setTotalEventsFetched(events.length < eventsPerPage);
     } catch (error) {
@@ -24,13 +25,6 @@ const Events = () => {
   useEffect(() => {
     fetchEvents(currentPage);
   }, [currentPage]);
-
-  // Calcular el índice inicial y final de los eventos para la página actual
-  const startIndex = (currentPage - 1) * eventsPerPage;
-  const endIndex = startIndex + eventsPerPage;
-
-  // Obtener los eventos para la página actual
-  const eventsToShow = events.slice(startIndex, endIndex);
 
   // Manejar el cambio de página
   const handlePageChange = (pageNumber: number) => {
