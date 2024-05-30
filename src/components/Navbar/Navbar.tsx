@@ -56,13 +56,18 @@ export const Navbar = () => {
   return (
     <>
       <div className="bg-black ">
-        <div className="text-white text-base flex justify-between items-center p-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
+        <div className={`${isFixed
+            ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
+            : "relative"
+            }`}>
+
+        <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
           <div className="min-[769px]:hidden cursor-pointer" onClick={toggleModal}>
             menu
           </div>
           <div>
             <Link href={"/"}>
-              <img src="/logo2.png" alt="radioticket" className="h-28 " />
+              <img src="/logo2.png" alt="radioticket" className="h-20" />
             </Link>
           </div>
           <div className="flex gap-1 items-center">
@@ -81,6 +86,7 @@ export const Navbar = () => {
             carrito
           </div>
         </div>
+        </div>
         <div
           className={`${isFixed
             ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
@@ -88,7 +94,7 @@ export const Navbar = () => {
             }`}
         >
           <div className="text-[#ffffff9b] pr-5 pl-2 flex justify-between max-w-7xl mx-auto max-[768px]:hidden">
-            <div className="py-5 text-base">
+            <div className="py-5 text-sm">
               <Link href={"/"}>
                 <span
                   className={`p-4 hover:text-white transition duration-300 ${pathname === "/"
