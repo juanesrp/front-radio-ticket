@@ -1,12 +1,29 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardEvents from "./CardEvents";
 import { eventPreLoad } from "@/helpers/eventPreLoad";
+import { getEvents } from "@/utils/events.util";
+import { IEvent } from "@/interfaces";
 
 const Events = () => {
   const eventsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
-  const events = eventPreLoad;
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [totalEventsFetched, setTotalEventsFetched] = useState(false);
+
+  const fetchEvents = async (page: number) => {
+    try {
+      const events: IEvent[] = await getEvents(page, eventsPerPage);
+      setEvents(events);
+      setTotalEventsFetched(events.length < eventsPerPage);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents(currentPage);
+  }, [currentPage]);
 
   // Calcular el índice inicial y final de los eventos para la página actual
   const startIndex = (currentPage - 1) * eventsPerPage;
@@ -14,11 +31,12 @@ const Events = () => {
 
   // Obtener los eventos para la página actual
   const eventsToShow = events.slice(startIndex, endIndex);
-  console.log(startIndex, endIndex);
 
   // Manejar el cambio de página
   const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber > 0) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   return (
@@ -43,7 +61,7 @@ const Events = () => {
         </div>
       </header>
       <div className="grid grid-cols-2 mx-3 md:grid-cols-4 gap-2 max-w-6xl md:mx-auto my-4">
-        {eventsToShow.map((event) => (
+        {events.map((event) => (
           <CardEvents key={event.id} {...event} />
         ))}
       </div>
@@ -57,7 +75,7 @@ const Events = () => {
         </button>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={endIndex >= events.length}
+          disabled={totalEventsFetched}
           className="ml-2 px-4 py-2 bg-gray-200 rounded-md hover:scale-105 transition-transform"
         >
           Página Siguiente

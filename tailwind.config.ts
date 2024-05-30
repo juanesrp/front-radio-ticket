@@ -1,6 +1,6 @@
+import plugin from "tailwindcss/plugin";
 import type { Config } from "tailwindcss";
 const flowbite = require("flowbite-react/tailwind");
-
 
 const config: Config = {
   content: [
@@ -20,7 +20,16 @@ const config: Config = {
     },
   },
   plugins: [
-    require('flowbite/plugin'),
+    plugin(function ({ addUtilities }) {
+      const newUtilities = {
+        ".decoration-clone": {
+          "-webkit-box-decoration-break": "clone",
+          "box-decoration-break": "clone",
+        },
+      };
+      addUtilities(newUtilities);
+    }),
+    require("flowbite/plugin"),
     flowbite.plugin(),
   ],
 };

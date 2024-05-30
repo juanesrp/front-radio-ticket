@@ -19,14 +19,14 @@ export default function Home() {
               href="/concerts"
               className="relative block box-content h-full z-[1] group"
               style={{
-                backgroundImage: `url(${eventsToShow[0].image})`,
+                backgroundImage: `url(${eventsToShow[0].imgUrl})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
             >
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300"></div>
               <div className="absolute left-0 bottom-12 z-[2] mr-2">
-                <p className="inline bg-red-600 text-white text-center px-3 text-3xl leading-snug">
+                <p className="inline bg-red-600 text-white decoration-clone text-center px-3 text-3xl leading-snug">
                   PRÓXIMOS EVENTOS
                 </p>
                 <p className="text-white text-sm p-2">VER TODO</p>

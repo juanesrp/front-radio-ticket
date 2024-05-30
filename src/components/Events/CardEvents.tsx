@@ -7,7 +7,7 @@ const CardEvents = (event: IEvent) => {
     <div className="col-span-1 relative flex flex-col items-center bg-gray-100 hover:bg-gray-200">
       <Link href={`/concerts/${event.id}`} className="p-6">
         <div className="flex justify-center">
-          <img src={event.image} className="w-40" />
+          <img src={event.imgUrl} className="w-40" />
         </div>
         <div className="flex flex-col items-center px-3 py-3">
           <h1 className="text-sm font-bold text-center">

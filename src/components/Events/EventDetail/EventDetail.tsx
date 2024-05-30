@@ -33,7 +33,7 @@ const EventDetail = ({ event }: { event: IEvent }) => {
     <section className="pt-10 mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 max-w-6xl mx-5 md:mx-auto">
         <div className="flex justify-center items-center px-6">
-          <img src={event.image} className="w-full max-w-96" />
+          <img src={event.imgUrl} className="w-full max-w-96" />
         </div>
         <div className="grid-cols-1">
           <div className="flex flex-col mt-5 text-center md:text-left ">

@@ -1,14 +1,33 @@
 "use client";
 import { IEvent } from "@/interfaces";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EventDetail from "./EventDetail";
 import CardEvents from "../CardEvents";
 import { eventPreLoad } from "@/helpers/eventPreLoad";
 import Link from "next/link";
+import { getEvents } from "@/utils/events.util";
+import page from "@/app/about/page";
 
 const CardEventDetail = ({ event }: { event: IEvent }) => {
-  const events = eventPreLoad.filter((e) => e.id !== event.id);
-  const eventsToShow = events.slice(0, 4);
+  const eventsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const eventsFilter = events.filter((e) => e.id !== event.id);
+
+  const fetchEvents = async (page: number) => {
+    try {
+      const events: IEvent[] = await getEvents(page, eventsPerPage);
+      setEvents(events);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents(currentPage);
+  }, []);
+
+  const eventsToShow = eventsFilter.slice(0, 4);
 
   return (
     <main>
