@@ -1,15 +1,17 @@
 export interface RegisterProps {
-    email: string
-    password: string
-    name: string
-    address: string
-    phone: string
+    name: string,
+    lastName: string,
+    phone: string,
+    email: string,
+    password: string,
+    confirmPassword: string
 }
 
 export interface RegisterErrorProps {
-    email: string
-    password: string
-    name: string
-    address: string
-    phone: string
+    name: string,
+    lastName: string,
+    phone: string,
+    email: string,
+    password: string,
+    confirmPassword: string
 }
