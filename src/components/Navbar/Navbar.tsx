@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { UserData } from "@/interfaces/userData";
 
-const guestRoutes = ['/', '/concerts', '/about', '/contact']
+const protectedRoutes = ['/dashMyUser', '/dashAdmi']
 
 export const Navbar = () => {
   const router = useRouter();
@@ -64,7 +64,9 @@ export const Navbar = () => {
     const userSession = userSessionString ? JSON.parse(userSessionString) : null;
     if (userSession) {
       setAuthUser(userSession)
-    } else if (!guestRoutes.includes(pathname)) {
+
+    } else if (protectedRoutes.includes(pathname)) {
+
       router.push('/login');
     }
   }, [pathname, router]);
