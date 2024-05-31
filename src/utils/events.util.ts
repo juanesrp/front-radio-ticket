@@ -165,3 +165,18 @@ export const postEvent = async (eventData: {
     return { error: "Error desconocido al crear el evento" };
   }
 };
+
+export const postImage = async (formData: FormData) => {
+  try {
+    const res = await axios.post(`${api}/cloudinary`, formData);
+    return res
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error;
+      if (axiosError.response && axiosError.response.status === 400) {
+        alert("La imagen es demasiado grande");
+      }
+    }
+    throw error;
+  }
+}

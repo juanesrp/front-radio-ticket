@@ -97,7 +97,7 @@ export const Navbar = () => {
 
           <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
             <div className="min-[769px]:hidden cursor-pointer" onClick={toggleModal}>
-              menu
+              <img src="/menu.svg" alt="menu" className="h-9"/>
             </div>
             <div>
               <Link href={"/"}>
@@ -114,10 +114,10 @@ export const Navbar = () => {
                 </div>
               ) : (
                 <button onClick={toggleSearch} className="max-[768px]:hidden">
-                  buscar
+                  <img src="/search.svg" alt="buscador" className="h-7"/>
                 </button>
               )}
-              carrito
+              <img src="/shop.svg" alt="carrito" className="h-8"/>
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@ export const Navbar = () => {
               <Link href={"/"}>
                 <span
                   className={`p-4 hover:text-white transition duration-300 ${pathname === "/"
-                    ? "text-white border-b-[6px] border-red-500"
+                    ? "text-white border-b-[6px] border-red-600"
                     : ""
                     }`}
                 >
@@ -142,7 +142,7 @@ export const Navbar = () => {
               <Link href={"/concerts"}>
                 <span
                   className={`p-4 hover:text-white transition duration-300 ${pathname === "/concerts"
-                    ? "text-white border-b-[6px] border-red-500"
+                    ? "text-white border-b-[6px] border-red-600"
                     : ""
                     }`}
                 >
@@ -151,8 +151,8 @@ export const Navbar = () => {
               </Link>
               <Link href={"/about"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/about"
-                    ? "text-white border-b-[6px] border-red-500"
+                  className={`p-4  hover:text-white transition duration-300 ${pathname === "/about"
+                    ? "text-white border-b-[6px] border-red-600"
                     : ""
                     }`}
                 >
@@ -162,7 +162,7 @@ export const Navbar = () => {
               <Link href={"/contact"}>
                 <span
                   className={`p-4 hover:text-white transition duration-300 ${pathname === "/contact"
-                    ? "text-white border-b-[6px] border-red-500"
+                    ? "text-white border-b-[6px] border-red-600"
                     : ""
                     }`}
                 >
@@ -170,7 +170,7 @@ export const Navbar = () => {
                 </span>
               </Link>
             </div>
-            <div className="py-5 text-xs flex items-center">
+            <div className="flex items-center">
               {isFixed &&
                 (isVisible ? (
                   <div ref={searchRef}>
@@ -181,19 +181,19 @@ export const Navbar = () => {
                   </div>
                 ) : (
                   <button onClick={toggleSearch} className="hover:text-white">
-                    buscar
+                    <img src="/search.svg" alt="carrito" className="h-7 pr-1"/>
                   </button>
                 ))}
               {authUser ? (
-                <div className="p-4 hover:text-white transition duration-300 cursor-pointer">
+                <div className="hover:text-white transition duration-300 cursor-pointer pr-1">
                   <span onClick={handleLogout}>
                     CERRAR SESION
                   </span>
                 </div>
               ) : ""}
               <Link href={homePath}>
-                <span className="p-4 hover:text-white transition duration-300">
-                  {authUser ? authUser.name : "CUENTA"}
+                <span className=" hover:text-white transition duration-300">
+                  {authUser ? authUser.name.toLocaleUpperCase() : (<img src="/avatar.svg" alt="avatar" className="h-7"/>)}
                 </span>
               </Link>
             </div>
@@ -226,11 +226,11 @@ export const Navbar = () => {
             </Link>
             <Link href={homePath}>
                 <span className="p-4 hover:text-white transition duration-300">
-                  {authUser ? authUser.name : "CUENTA"}
+                  {authUser ? authUser.name.toLocaleUpperCase() : "CUENTA"}
                 </span>
               </Link>
               {authUser ? (
-                <div className="p-4 hover:text-white transition duration-300 cursor-pointer">
+                <div className="hover:text-white transition duration-300 cursor-pointer">
                   <span onClick={handleLogout}>
                     CERRAR SESION
                   </span>
