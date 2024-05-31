@@ -1,10 +1,13 @@
 "use client"
+import { ICategory } from '@/interfaces';
+import { getCategories } from '@/utils/categories.util';
 import { postEvent, postImage } from '@/utils/events.util';
 import React, { useEffect, useState } from 'react';
 
 const FormNewEvent = () => {
     const [image, setImage] = useState<File | null>(null)
     const [minDate, setMinDate] = useState<string>("")
+    const [categories, setCategories] = useState<ICategory[]>([]);
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -20,7 +23,20 @@ const FormNewEvent = () => {
         setMinDate(today);
     },[])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const fetchedCategories = await getCategories();
+                setCategories(fetchedCategories);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setInput({
             ...input,
@@ -136,7 +152,12 @@ const FormNewEvent = () => {
 
                         <div className='flex flex-col'>
                             <label htmlFor="category" className='text-gray-700 font-semibold my-2'>Categoría del evento*</label>
-                            <input type="text" id='category' name='category' className='rounded-md' value={input.category} onChange={handleChange} />
+                            <select id='category' name='category' className='rounded-md' value={input.category} onChange={handleChange} >
+                            <option value="">Selecciona una categoría</option>
+                            {categories.map(category => (
+                                    <option key={category.id} value={category.name}>{category.name}</option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className='flex flex-col'>
