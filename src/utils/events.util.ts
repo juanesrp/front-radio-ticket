@@ -114,8 +114,8 @@ export const getEventsByCategory = async (
         category,
       },
     });
-    console.log("Estoy en el getEventsByCategory", res.data);
-    const events: IEvent[] = res.data;
+    console.log("Estoy en el getEventsByCategory", res.data.data);
+    const events: IEvent[] = res.data.data;
     return events;
   } catch (error: any) {
     throw new Error(error);
