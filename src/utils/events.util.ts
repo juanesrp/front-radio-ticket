@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IEvent } from "@/interfaces";
+import { log } from "console";
 const api = process.env.NEXT_PUBLIC_API;
 
 export const getEvents = async (
@@ -31,30 +32,26 @@ export const getEventById = async (id: string) => {
   }
 };
 
-export const getEventsByOlderToRecent = async (page: number, limit: number) => {
+export const getEventsByDate = async (
+  page: number,
+  limit: number,
+  order: string,
+  category?: string
+) => {
   try {
-    const res = await axios.get(`${api}/events/recientesPrimero`, {
-      params: {
-        page,
-        limit,
-      },
-    });
-    const events: IEvent[] = res.data;
-    return events;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
+    console.log("Estoy en el getEventsByDate: ", category);
 
-export const getEventsByRecentToOlder = async (page: number, limit: number) => {
-  try {
-    const res = await axios.get(`${api}/events/antiguosPrimero`, {
+    const res = await axios.get(`${api}/events/date`, {
       params: {
         page,
         limit,
+        category,
+        order,
       },
     });
-    const events: IEvent[] = res.data;
+    console.log("Estoy en el getEventsByDate: ", res.data.events);
+
+    const events: IEvent[] = res.data.events;
     return events;
   } catch (error: any) {
     throw new Error(error);
@@ -64,17 +61,21 @@ export const getEventsByRecentToOlder = async (page: number, limit: number) => {
 export const getEventsByAZ = async (
   order: string,
   page: number,
-  limit: number
+  limit: number,
+  category?: string
 ) => {
   try {
+    console.log("Estoy en el getEventsByAZ: ", category);
+
     const res = await axios.get(`${api}/events/alphabetical`, {
       params: {
         order,
         page,
         limit,
+        category,
       },
     });
-    const events: IEvent[] = res.data;
+    const events: IEvent[] = res.data.events;
     return events;
   } catch (error: any) {
     throw new Error(error);
@@ -84,14 +85,18 @@ export const getEventsByAZ = async (
 export const getEventsByPrice = async (
   order: string,
   page: number,
-  limit: number
+  limit: number,
+  category?: string
 ) => {
   try {
+    console.log("Estoy en el getEventsByPrice: ", category);
+
     const res = await axios.get(`${api}/events/price`, {
       params: {
         order,
         page,
         limit,
+        category,
       },
     });
     const events: IEvent[] = res.data;

@@ -6,9 +6,8 @@ import {
   getEvents,
   getEventsByAZ,
   getEventsByCategory,
-  getEventsByOlderToRecent,
+  getEventsByDate,
   getEventsByPrice,
-  getEventsByRecentToOlder,
 } from "@/utils/events.util";
 import { ICategory, IEvent } from "@/interfaces";
 import { getCategories } from "@/utils/categories.util";
@@ -23,24 +22,56 @@ const Events = () => {
   const [category, setCategory] = useState("");
 
   console.log(categories);
+  console.log(category);
 
-  const fetchEvents = async (page: number) => {
+  const fetchEvents = async (page: number, category: string) => {
     try {
       let events: IEvent[] = [];
-      if (category) {
-        events = await getEventsByCategory(page, eventsPerPage, category);
-      } else if (sortBy === "oldsToRecents") {
-        events = await getEventsByOlderToRecent(page, eventsPerPage);
+
+      if (sortBy === "oldsToRecents") {
+        console.log("Estoy en el if", category);
+
+        events = await getEventsByDate(
+          page,
+          eventsPerPage,
+          "descending",
+          category || undefined
+        );
       } else if (sortBy === "alphabeticalAZ") {
-        events = await getEventsByAZ("ascending", page, eventsPerPage);
+        events = await getEventsByAZ(
+          "ascending",
+          page,
+          eventsPerPage,
+          category || undefined
+        );
       } else if (sortBy === "alphabeticalZA") {
-        events = await getEventsByAZ("descending", page, eventsPerPage);
+        events = await getEventsByAZ(
+          "descending",
+          page,
+          eventsPerPage,
+          category || undefined
+        );
       } else if (sortBy === "priceMinToHigh") {
-        events = await getEventsByPrice("ascending", page, eventsPerPage);
+        events = await getEventsByPrice(
+          "ascending",
+          page,
+          eventsPerPage,
+          category || undefined
+        );
       } else if (sortBy === "priceHighToMin") {
-        events = await getEventsByPrice("descending", page, eventsPerPage);
+        events = await getEventsByPrice(
+          "descending",
+          page,
+          eventsPerPage,
+          category || undefined
+        );
       } else {
-        events = await getEventsByRecentToOlder(page, eventsPerPage);
+        events = await getEventsByDate(
+          page,
+          eventsPerPage,
+          "ascending",
+          category || undefined
+        );
       }
       setEvents(events);
       setTotalEventsFetched(events.length < eventsPerPage);
@@ -60,7 +91,7 @@ const Events = () => {
 
   useEffect(() => {
     fetchCategories();
-    fetchEvents(currentPage);
+    fetchEvents(currentPage, category);
   }, [currentPage, sortBy, category]);
 
   const handlePageChange = (pageNumber: number) => {
@@ -114,8 +145,8 @@ const Events = () => {
               className="border-none p-2 w-full"
               onChange={handleSortChange}
             >
-              <option value="recentsToOlds">Mas recientes</option>
-              <option value="oldsToRecents">Mas antiguos</option>
+              <option value="recentsToOlds">Más cerca</option>
+              <option value="oldsToRecents">Más lejanos</option>
               <option value="alphabeticalAZ">Alfabéticamente, A-Z</option>
               <option value="alphabeticalZA">Alfabéticamente, Z-A</option>
               <option value="priceMinToHigh">Precio, menor a mayor</option>

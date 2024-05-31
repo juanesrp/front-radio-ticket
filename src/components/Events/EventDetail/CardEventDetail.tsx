@@ -5,39 +5,41 @@ import EventDetail from "./EventDetail";
 import CardEvents from "../CardEvents";
 import { eventPreLoad } from "@/helpers/eventPreLoad";
 import Link from "next/link";
-import { getEvents } from "@/utils/events.util";
+
 import page from "@/app/about/page";
+import { getEventsByDate } from "@/utils/events.util";
 
 const CardEventDetail = ({ event }: { event: IEvent }) => {
-  const eventsPerPage = 12;
-  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 5;
   const [events, setEvents] = useState<IEvent[]>([]);
-  const eventsFilter = events.filter((e) => e.id !== event.id);
 
   const fetchEvents = async (page: number) => {
     try {
-      const events: IEvent[] = await getEvents(page, eventsPerPage);
-      setEvents(events);
+      const events: IEvent[] = await getEventsByDate(
+        page,
+        eventsPerPage,
+        "ascending"
+      );
+      const eventsFilter = events.filter((e) => e.id !== event.id);
+      setEvents(eventsFilter);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
   };
 
   useEffect(() => {
-    fetchEvents(currentPage);
+    fetchEvents(1);
   }, []);
-
-  const eventsToShow = eventsFilter.slice(0, 4);
 
   return (
     <main>
       <EventDetail event={event} />
-      <section className="grid pt-20 px-5 md:px-0 bg-white">
+      <section className="grid pt-20 px-4 lg:px-0 bg-white">
         <h1 className="text-3xl font-medium text-center mb-7">
           TAMBIEN TE PUEDE INTERESAR
         </h1>
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4 max-w-6xl mx-auto">
-          {eventsToShow.map((event) => (
+          {events.map((event) => (
             <CardEvents key={event.id} {...event} />
           ))}
         </div>
