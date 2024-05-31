@@ -3,4 +3,5 @@ export interface UserData {
     name: string,
     email: string,
     isAdmin: boolean,
+    isSuperAdmin: boolean,
 }

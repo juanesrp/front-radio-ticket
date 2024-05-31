@@ -52,6 +52,7 @@ const Login: React.FC = () => {
           name: decodedToken.name,
           email: decodedToken.email,
           isAdmin: decodedToken.isAdmin,
+          isSuperAdmin: decodedToken.isSuperAdmin
         }));
 
         if (decodedToken.isAdmin) {
