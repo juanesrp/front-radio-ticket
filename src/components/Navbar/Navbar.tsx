@@ -1,12 +1,19 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { UserData } from "@/interfaces/userData";
+
+const guestRoutes = ['/', '/concerts', '/about', '/contact']
 
 export const Navbar = () => {
+  const router = useRouter();
+  const pathName = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isFixed, setIsFixed] = useState<boolean>(false);
+  const [authUser, setAuthUser] = useState<UserData | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -53,39 +60,51 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const userSessionString = localStorage.getItem('userSession');
+    const userSession = userSessionString ? JSON.parse(userSessionString) : null;
+    if (userSession) {
+      setAuthUser(userSession)
+    } else if (!guestRoutes.includes(pathName)) {
+      router.push('/login');
+    }
+  }, [pathName]);
+
+  const homePath = authUser ? (authUser.isAdmin ? '/dashAdmi' : '/dashMyUser') : '/login'
+
   return (
     <>
       <div className="bg-black ">
         <div className={`${isFixed
-            ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
-            : "relative"
-            }`}>
+          ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
+          : "relative"
+          }`}>
 
-        <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
-          <div className="min-[769px]:hidden cursor-pointer" onClick={toggleModal}>
-            menu
+          <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
+            <div className="min-[769px]:hidden cursor-pointer" onClick={toggleModal}>
+              menu
+            </div>
+            <div>
+              <Link href={"/"}>
+                <img src="/logo2.png" alt="radioticket" className="h-20" />
+              </Link>
+            </div>
+            <div className="flex gap-1 items-center">
+              {isVisible ? (
+                <div ref={searchRef}>
+                  <input
+                    type="search"
+                    className="bg-[#3b3b3bd5] text-white max-[768px]:hidden rounded"
+                  />
+                </div>
+              ) : (
+                <button onClick={toggleSearch} className="max-[768px]:hidden">
+                  buscar
+                </button>
+              )}
+              carrito
+            </div>
           </div>
-          <div>
-            <Link href={"/"}>
-              <img src="/logo2.png" alt="radioticket" className="h-20" />
-            </Link>
-          </div>
-          <div className="flex gap-1 items-center">
-            {isVisible ? (
-              <div ref={searchRef}>
-                <input
-                  type="search"
-                  className="bg-[#3b3b3bd5] text-white max-[768px]:hidden rounded"
-                />
-              </div>
-            ) : (
-              <button onClick={toggleSearch} className="max-[768px]:hidden">
-                buscar
-              </button>
-            )}
-            carrito
-          </div>
-        </div>
         </div>
         <div
           className={`${isFixed
@@ -150,12 +169,11 @@ export const Navbar = () => {
                     buscar
                   </button>
                 ))}
-              <Link href={"/dashAdmi"}>
+              <Link href={homePath}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/DashAdmin" ? "text-white" : ""
-                    }`}
+                  className="p-4 hover:text-white transition duration-300"
                 >
-                  CUENTA
+                  {authUser ? authUser.name : "Login"}
                 </span>
               </Link>
             </div>
@@ -164,9 +182,8 @@ export const Navbar = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
       >
         <div
           ref={sidebarRef}
@@ -202,3 +219,5 @@ export const Navbar = () => {
     </>
   );
 };
+
+export default Navbar;

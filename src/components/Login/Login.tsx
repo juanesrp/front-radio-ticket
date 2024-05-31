@@ -3,12 +3,13 @@ import { LoginErrorProps, LoginProps } from '@/interfaces/login';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import axios from 'axios';
+import Link from "next/link";
 import { validateLoginForms } from '@/helpers/validateForms';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 
 const Login: React.FC = () => {
   const router = useRouter();
-
+  const jwt = require('jsonwebtoken');
   const loginData = {
     email: '',
     password: '',
@@ -43,16 +44,31 @@ const Login: React.FC = () => {
       })
       console.log({ res });
       if (res.status === 201) {
-        const { token, user } = res.data;
-        localStorage.setItem("userSession", JSON.stringify({ token: token, userData: user }));
-        alert("Te has logeado correctamente");
-        router.push("/");
+        const { token } = res.data;
+        // Decodificar el toke
+        const decodedToken = jwt.decode(token);
+        localStorage.setItem("userSession", JSON.stringify({
+          token: token,
+          name: decodedToken.name,
+          email: decodedToken.email,
+          isAdmin: decodedToken.isAdmin,
+        }));
+
+        if (decodedToken.isAdmin) {
+          alert("Te has logeado correctamente")
+          router.push('/dashAdmi');
+        } else {
+          alert("Te has logeado correctamente")
+          router.push('/dashMyUser');
+        }
       } else {
         alert(res.data.message);
       }
     } catch (error: any) {
-      console.error("Error:", error);
+      console.error("Error:", error.response.data);
+      alert("Error: " + error.response.data.message)
       throw new Error(error);
+
     }
   };
   return (
@@ -130,9 +146,9 @@ const Login: React.FC = () => {
         </button>
         <p className="mt-6 text-center text-gray-600 text-lg">
           ¿Olvidó su contraseña?{' '}
-          <a href="#" className="text-blue-500 hover:underline">
+          <Link href="/register" className="text-blue-500 hover:underline">
             Crear cuenta
-          </a>
+          </Link>
         </p>
       </div>
     </div>

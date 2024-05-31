@@ -53,8 +53,13 @@ const Register: React.FC = () => {
             }
         } catch (error: any) {
             console.error("Error:", error);
-            throw new Error(error);
-        }
+            if (error.response) {
+              alert("Error: " + error.response.data.message);
+            } else {
+              alert("Ha ocurrido un error durante el registro");
+            }
+            throw new Error("Registration failed");
+          }
     };
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value);
