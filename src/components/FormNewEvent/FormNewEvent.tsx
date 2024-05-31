@@ -54,72 +54,95 @@ const FormNewEvent = () => {
                 ...ticket,
                 price: parseFloat(ticket.price),
                 stock: parseInt(ticket.stock)
-            }))
+            }))  
         };
         const result = await postEvent(eventData);
         console.log(eventData);
         console.log(result);
+        if (result.error) {
+            alert(`${result.error}`);
+        } else {
+            alert("Se creó el evento correctamente");
+            setInput({
+                name: "",
+                description: "",
+                imgUrl: "",
+                category: "",
+                date: "",
+                location: '',
+                tickets: [{ price: "", stock: "", zone: "" }],
+            });
+        }
     };
 
     return (
         <>
-            <div className='flex flex-col items-center my-12'>
-                <form className='max-w-md w-full flex flex-col bg-gray-100 px-6 py-8 rounded-md shadow-md' onSubmit={handleSubmit}>
+            <div className='flex flex-col items-center my-16'>
+                <form onSubmit={handleSubmit} className='flex gap-4 max-[500px]:flex-col'>
+                    <div className='bg-gray-100 max-w-md w-full flex flex-col min-[500px]:px-12 px-6 py-8 rounded-md shadow-md'>
+
                     <h2 className='text-3xl font-bold text-center text-gray-800 mb-6'>Crear nuevo evento</h2>
                     
                     <div className='flex flex-col'>
-                        <label htmlFor="name" className='text-gray-600 my-2'>Nombre del evento</label>
+                        <label htmlFor="name" className='text-gray-700 font-semibold my-2'>Nombre del evento</label>
                         <input type="text" id='name' name='name' className='rounded-md' value={input.name} onChange={handleChange}/>   
                     </div>
 
                     <div className='flex flex-col'>
-                        <label htmlFor="description" className='text-gray-600 my-2'>Descripción del evento</label>
+                        <label htmlFor="description" className='text-gray-700 font-semibold my-2'>Descripción del evento</label>
                         <input type="text" id='description' name='description' className='rounded-md' value={input.description} onChange={handleChange}/>
                     </div>
 
                     <div className='flex flex-col'>
-                        <label htmlFor="imgUrl" className='text-gray-600 my-2'>Poster del evento</label>
+                        <label htmlFor="imgUrl" className='text-gray-700 font-semibold my-2'>Poster del evento</label>
                         <input type="text" id='imgUrl' name='imgUrl' className='rounded-md' value={input.imgUrl} onChange={handleChange}/>
                     </div>
 
                     <div className='flex flex-col'>
-                        <label htmlFor="category" className='text-gray-600 my-2'>Categoría del evento</label>
+                        <label htmlFor="category" className='text-gray-700 font-semibold my-2'>Categoría del evento</label>
                         <input type="text" id='category' name='category' className='rounded-md' value={input.category} onChange={handleChange}/>
                     </div>
 
                     <div className='flex flex-col'> 
-                        <label htmlFor="date" className='text-gray-600 my-2'>Fecha del evento</label>
+                        <label htmlFor="date" className='text-gray-700 font-semibold my-2'>Fecha del evento</label>
                         <input type="date" id='date' name='date' className='rounded-md' value={input.date} onChange={handleChange}/>
                     </div>
 
                     <div className='flex flex-col'>
-                        <label htmlFor="location" className='text-gray-600 my-2'>Ubicación del evento</label>
+                        <label htmlFor="location" className='text-gray-700 font-semibold my-2'>Ubicación del evento</label>
                         <input type="text" id='location' name='location' className='rounded-md' value={input.location} onChange={handleChange}/>
                     </div>
 
-                    <span className='text-gray-600 my-2'>Tickets</span>
+                    <div className='flex justify-center'>
+                        <input 
+                            type="submit" 
+                            value="Enviar" 
+                            className='bg-red-600 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-700 transition duration-200 cursor-pointer max-[500px]:hidden'/> 
+                    </div>
+
+                    </div>
+                    
+                    <div className='bg-gray-100 flex flex-col min-[500px]:px-10 px-4 py-8 rounded-md shadow-md'>
+
+                    <span className='text-3xl font-bold text-center text-gray-800 mb-6'>Tickets</span>
 
                     {input.tickets.map((ticket, index) => (
 
                         <div key={index} className='flex flex-col border border-gray-300 p-4 my-2 rounded-md'>
 
                             <div className='flex flex-col'>
-                                <label htmlFor={`stock-${index}`} className='text-gray-600 my-2'>Cantidad</label>
+                                <label htmlFor={`stock-${index}`} className='text-gray-700 font-semibold my-2'>Cantidad</label>
                                 <input type="number" id={`stock-${index}`} name='stock' className='rounded-md' value={ticket.stock} onChange={e => handleTicketChange(index, e)}/>
                             </div>
 
                             <div className='flex flex-col'>
-                                <label htmlFor={`price-${index}`} className='text-gray-600 my-2'>Precio</label>
+                                <label htmlFor={`price-${index}`} className='text-gray-700 font-semibold my-2'>Precio</label>
                                 <input  type="number" id={`price-${index}`} name='price' className='rounded-md' value={ticket.price} onChange={e => handleTicketChange(index, e)}/>
                             </div>
 
                             <div className='flex flex-col'>
-                                <label htmlFor={`zone-${index}`} className='text-gray-600 my-2'>Zona</label>
-                                <select className='rounded-md'  value={ticket.zone}  id={`zone-${index}`}  name='zone' onChange={e => handleTicketChange(index, e)}>   
-                                    <option>Elige una zona</option>
-                                    <option value="General">General</option>
-                                    <option value="VIP">VIP</option>
-                                </select>
+                                <label htmlFor={`zone-${index}`} className='text-gray-700 font-semibold my-2'>Zona</label>
+                                <input type='text' className='rounded-md'  value={ticket.zone}  id={`zone-${index}`}  name='zone' onChange={e => handleTicketChange(index, e)}/>   
                             </div>
 
                             <div className='flex justify-center'>
@@ -133,7 +156,7 @@ const FormNewEvent = () => {
 
                     <div className='flex justify-center'>
                     <button type="button" onClick={handleAddTicket} 
-                        className='bg-red-500 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-600 transition duration-200 cursor-pointer'
+                        className='bg-red-600 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-700 transition duration-200 cursor-pointer'
                     >Agregar ticket
                     </button>
                     </div>
@@ -142,7 +165,9 @@ const FormNewEvent = () => {
                         <input 
                             type="submit" 
                             value="Enviar" 
-                            className='bg-red-500 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-600 transition duration-200 cursor-pointer'/> 
+                            className='bg-red-600 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-700 transition duration-200 cursor-pointer min-[500px]:hidden'/> 
+                    </div>
+
                     </div>
                 </form> 
             </div>
