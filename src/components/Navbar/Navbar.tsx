@@ -73,6 +73,20 @@ export const Navbar = () => {
 
   const homePath = authUser ? (authUser.isAdmin === true || authUser.isSuperAdmin === true ? '/dashAdmi' : '/dashMyUser') : '/login'
 
+  const handleLogout = () => {
+    const isConfirmed = window.confirm("¿Estás seguro? Vas a cerrar sesión!!")
+    if (isConfirmed) {
+
+      window.alert("Sesión cerrada");
+
+      localStorage.removeItem("userSession");
+
+      window.location.href = "/";
+    } else {
+      window.alert("Cancelado");
+    }
+  }
+
   return (
     <>
       <div className="bg-black">
@@ -170,11 +184,16 @@ export const Navbar = () => {
                     buscar
                   </button>
                 ))}
+              {authUser ? (
+                <div className="p-4 hover:text-white transition duration-300 cursor-pointer">
+                  <span onClick={handleLogout}>
+                    CERRAR SESION
+                  </span>
+                </div>
+              ) : ""}
               <Link href={homePath}>
-                <span
-                  className="p-4 hover:text-white transition duration-300"
-                >
-                  {authUser ? authUser.name : "Login"}
+                <span className="p-4 hover:text-white transition duration-300">
+                  {authUser ? authUser.name : "CUENTA"}
                 </span>
               </Link>
             </div>
@@ -205,9 +224,18 @@ export const Navbar = () => {
             <Link href={"/contact"}>
               <span className="hover:text-white transition duration-300">CONTACTO</span>
             </Link>
-            <Link href={"/dashAdmi"}>
-              <span className="hover:text-white transition duration-300">CUENTA</span>
-            </Link>
+            <Link href={homePath}>
+                <span className="p-4 hover:text-white transition duration-300">
+                  {authUser ? authUser.name : "CUENTA"}
+                </span>
+              </Link>
+              {authUser ? (
+                <div className="p-4 hover:text-white transition duration-300 cursor-pointer">
+                  <span onClick={handleLogout}>
+                    CERRAR SESION
+                  </span>
+                </div>
+              ) : ""}
           </div>
           <button
             onClick={toggleModal}
