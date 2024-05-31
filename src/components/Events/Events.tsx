@@ -22,8 +22,7 @@ const Events = () => {
   const [sortBy, setSortBy] = useState("recentsToOlds");
   const [category, setCategory] = useState("");
 
-  console.log(sortBy);
-  console.log(events);
+  console.log(categories);
 
   const fetchEvents = async (page: number) => {
     try {
