@@ -9,7 +9,6 @@ const protectedRoutes = ['/dashMyUser', '/dashAdmi']
 
 export const Navbar = () => {
   const router = useRouter();
-  const pathName = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isFixed, setIsFixed] = useState<boolean>(false);
@@ -65,16 +64,18 @@ export const Navbar = () => {
     const userSession = userSessionString ? JSON.parse(userSessionString) : null;
     if (userSession) {
       setAuthUser(userSession)
-    } else if (protectedRoutes.includes(pathName)) {
+
+    } else if (protectedRoutes.includes(pathname)) {
+
       router.push('/login');
     }
-  }, [pathName]);
+  }, [pathname, router]);
 
-  const homePath = authUser ? (authUser.isAdmin ? '/dashAdmi' : '/dashMyUser') : '/login'
+  const homePath = authUser ? (authUser.isAdmin === true || authUser.isSuperAdmin === true ? '/dashAdmi' : '/dashMyUser') : '/login'
 
   return (
     <>
-      <div className="bg-black ">
+      <div className="bg-black">
         <div className={`${isFixed
           ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
           : "relative"
