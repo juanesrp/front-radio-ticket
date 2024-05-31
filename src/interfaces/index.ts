@@ -18,3 +18,8 @@ export interface IEvent {
     zone: string;
   }[];
 }
+
+export interface ICategory {
+  id: string;
+  name: string;
+}
