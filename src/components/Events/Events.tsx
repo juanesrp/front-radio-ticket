@@ -2,19 +2,47 @@
 import React, { useEffect, useState } from "react";
 import CardEvents from "./CardEvents";
 import { eventPreLoad } from "@/helpers/eventPreLoad";
-import { getEvents } from "@/utils/events.util";
-import { IEvent } from "@/interfaces";
+import {
+  getEvents,
+  getEventsByAZ,
+  getEventsByCategory,
+  getEventsByOlderToRecent,
+  getEventsByPrice,
+  getEventsByRecentToOlder,
+} from "@/utils/events.util";
+import { ICategory, IEvent } from "@/interfaces";
+import { getCategories } from "@/utils/categories.util";
 
 const Events = () => {
   const eventsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
   const [events, setEvents] = useState<IEvent[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [totalEventsFetched, setTotalEventsFetched] = useState(false);
+  const [sortBy, setSortBy] = useState("recentsToOlds");
+  const [category, setCategory] = useState("");
+
+  console.log(sortBy);
+  console.log(events);
 
   const fetchEvents = async (page: number) => {
     try {
-      const events: IEvent[] = await getEvents(page, eventsPerPage);
-
+      let events: IEvent[] = [];
+      if (category) {
+        events = await getEventsByCategory(page, eventsPerPage, category);
+      } else if (sortBy === "oldsToRecents") {
+        events = await getEventsByOlderToRecent(page, eventsPerPage);
+      } else if (sortBy === "alphabeticalAZ") {
+        events = await getEventsByAZ("ascending", page, eventsPerPage);
+      } else if (sortBy === "alphabeticalZA") {
+        events = await getEventsByAZ("descending", page, eventsPerPage);
+      } else if (sortBy === "priceMinToHigh") {
+        events = await getEventsByPrice("ascending", page, eventsPerPage);
+      } else if (sortBy === "priceHighToMin") {
+        events = await getEventsByPrice("descending", page, eventsPerPage);
+      } else {
+        events = await getEventsByRecentToOlder(page, eventsPerPage);
+      }
       setEvents(events);
       setTotalEventsFetched(events.length < eventsPerPage);
     } catch (error) {
@@ -22,15 +50,36 @@ const Events = () => {
     }
   };
 
-  useEffect(() => {
-    fetchEvents(currentPage);
-  }, [currentPage]);
+  const fetchCategories = async () => {
+    try {
+      const categories: ICategory[] = await getCategories();
+      setCategories(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
-  // Manejar el cambio de página
+  useEffect(() => {
+    fetchCategories();
+    fetchEvents(currentPage);
+  }, [currentPage, sortBy, category]);
+
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber > 0) {
       setCurrentPage(pageNumber);
     }
+  };
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setCategory(event.target.value);
+    setCurrentPage(1);
   };
 
   return (
@@ -39,17 +88,39 @@ const Events = () => {
         <div className="">
           <p>Alguna descripción</p>
         </div>
-        <div className="flex justify-end">
-          <div className="flex flex-col max-w-36">
+        <div className="flex justify-end gap-5">
+          <div className="flex flex-col ">
+            <label htmlFor="filterByCategory" className="font-bold text-sm">
+              FILTRAR POR CATEGORIA
+            </label>
+            <select
+              name="filterByCategory"
+              className="border-none p-2"
+              onChange={handleCategoryChange}
+            >
+              <option value="">CATEGORIAS</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col max-w-40">
             <label htmlFor="SortBy" className="font-bold text-sm text-left">
               ORDENAR POR
             </label>
-            <select name="SortBy" className="border-none p-2">
-              <option value="date" className="font-bold">
-                Fecha
-              </option>
-              <option value="name">Nombre</option>
-              <option value="price">Precio</option>
+            <select
+              name="SortBy"
+              className="border-none p-2 w-full"
+              onChange={handleSortChange}
+            >
+              <option value="recentsToOlds">Mas recientes</option>
+              <option value="oldsToRecents">Mas antiguos</option>
+              <option value="alphabeticalAZ">Alfabéticamente, A-Z</option>
+              <option value="alphabeticalZA">Alfabéticamente, Z-A</option>
+              <option value="priceMinToHigh">Precio, menor a mayor</option>
+              <option value="priceHighToMin">Precio, mayor a menor</option>
             </select>
           </div>
         </div>
