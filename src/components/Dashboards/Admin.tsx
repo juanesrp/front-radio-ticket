@@ -5,7 +5,7 @@ const Admin = () => {
     return (
         <div className='max-w-6xl mx-auto pb-10 px-5'>
             <h1 className='text-5xl pt-10 pb-4'>Mi Cuenta</h1>
-            <div className='text-center'>
+            <div className='pl-5'>
                <Link href={"/dashAdmi/newEvent"}><button className='bg-red-600 hover:bg-red-700 transition duration-300 rounded p-2 text-2xl text-white'>Crear evento</button></Link> 
             </div>
             <div className='grid grid-cols-1 md:grid-cols-3 gap-5 px-5 pt-3'>

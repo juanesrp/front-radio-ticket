@@ -1,10 +1,25 @@
 export interface IEvent {
-  id: number;
+  id: string;
   name: string;
   description: string;
-  image: string;
+  imgUrl: string;
   date: string;
-  stock: number;
-  price: number;
-  localization: string;
+  location: string;
+  userEmail: string | null;
+  ticketId: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  tickets: {
+    id: string;
+    stock: number;
+    price: number;
+    zone: string;
+  }[];
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
 }

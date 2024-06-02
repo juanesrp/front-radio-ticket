@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const Loading = () => {
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
+    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-75 z-50">
       <motion.div
         className="flex items-center"
         initial={{ opacity: 0 }}
