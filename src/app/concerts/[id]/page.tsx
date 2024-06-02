@@ -1,24 +1,10 @@
-"use client";
 import CardEventDetail from "@/components/Events/EventDetail/CardEventDetail";
-import { eventPreLoad } from "@/helpers/eventPreLoad";
 import { IEvent } from "@/interfaces";
 import { getEventById } from "@/utils/events.util";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-const page = ({ params }: { params: { id: string } }) => {
-  const [event, setEvent] = useState<IEvent>();
-  const fetchEvents = async () => {
-    try {
-      const event: IEvent = await getEventById(params.id);
-      setEvent(event);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+const page = async ({ params }: { params: { id: string } }) => {
+  const event: IEvent = await getEventById(params.id);
 
   return (
     <div className="bg-gray-50">
