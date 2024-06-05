@@ -71,7 +71,9 @@ export const Navbar = () => {
     }
   }, [pathname, router]);
 
-  const homePath = authUser ? (authUser.isAdmin === true || authUser.isSuperAdmin === true ? '/dashAdmi' : '/dashMyUser') : '/login'
+  const homePath = authUser ? 
+  (authUser.isSuperAdmin ? "/dashSuperAdmin" : (authUser.isAdmin ? "/dashAdmi" : "/dashMyUser")) 
+  : "/login";
 
   const handleLogout = () => {
     const isConfirmed = window.confirm("¿Estás seguro? Vas a cerrar sesión!!")
@@ -185,14 +187,14 @@ export const Navbar = () => {
                   </button>
                 ))}
               {authUser ? (
-                <div className="hover:text-white transition duration-300 cursor-pointer pr-1">
+                <div className="hover:text-white transition duration-300 cursor-pointer pr-5">
                   <span onClick={handleLogout}>
                     CERRAR SESION
                   </span>
                 </div>
               ) : ""}
               <Link href={homePath}>
-                <span className=" hover:text-white transition duration-300">
+                <span className=" hover:text-white transition duration-300 ">
                   {authUser ? authUser.name.toLocaleUpperCase() : (<img src="/avatar.svg" alt="avatar" className="h-7"/>)}
                 </span>
               </Link>
@@ -239,7 +241,7 @@ export const Navbar = () => {
           </div>
           <button
             onClick={toggleModal}
-            className="mt-4 bg-[#d8232f] text-white p-2 rounded"
+            className="mt-4 border-red-600 text-white p-2 rounded"
           >
             Cerrar
           </button>
