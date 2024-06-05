@@ -23,3 +23,5 @@ export interface ICategory {
   id: string;
   name: string;
 }
+
+export type IEventResponse = IEvent[] | { error: string };

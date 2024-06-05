@@ -1,13 +1,17 @@
 "use client"
 import { ICategory } from '@/interfaces';
+import { UserData } from '@/interfaces/userData';
 import { getCategories } from '@/utils/categories.util';
 import { postEvent, postImage } from '@/utils/events.util';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const FormNewEvent = () => {
     const [image, setImage] = useState<File | null>(null)
+    const [authUser, setAuthUser] = useState<UserData | null>(null);
     const [minDate, setMinDate] = useState<string>("")
     const [categories, setCategories] = useState<ICategory[]>([]);
+    const router = useRouter()
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -18,10 +22,18 @@ const FormNewEvent = () => {
         tickets: [{ price: "", stock: "", zone: "" }],
     });
 
-    useEffect(()=>{
+    useEffect(() => {
+        const userSessionString = localStorage.getItem('userSession');
+        const userSession = userSessionString ? JSON.parse(userSessionString) : null;
+        if (userSession) {
+            setAuthUser(userSession)
+        }
+    }, [])
+
+    useEffect(() => {
         const today = new Date().toISOString().split("T")[0];
         setMinDate(today);
-    },[])
+    }, [])
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -78,7 +90,8 @@ const FormNewEvent = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!input.name || !input.description || !input.category || !input.date || !input.location || !input.tickets[0].price || !input.tickets[0].stock || !input.tickets[0].zone || !image) {
+        if (!input.name || !input.description || !input.category || !input.date || !input.location ||
+            !input.tickets[0].price || !input.tickets[0].stock || !input.tickets[0].zone || !image) {
             alert("Por favor completa todos los campos");
             return;
         }
@@ -90,8 +103,17 @@ const FormNewEvent = () => {
             formData.append('file', image);
             try {
                 const res = await postImage(formData);
-                if (res && res.data && res.data.secure_url) {
+                if ("data" in res && res.data && res.data.secure_url) {
                     imageUrl = res.data.secure_url;
+                } else if ('error' in res) {
+                    if (res.error === "Invalid token") {
+                        alert("El token es inválido. Vuelve a iniciar sesion.");
+                        localStorage.removeItem("userSession");
+                        window.location.href = "/login";
+                    } else {
+                        alert(res.error);
+                        return;
+                    }
                 }
             } catch (error: any) {
                 console.error("Error uploading image to Cloudinary", error);
@@ -101,29 +123,27 @@ const FormNewEvent = () => {
 
         const eventData = {
             ...input,
+            name: input.name.toUpperCase(),
             imgUrl: imageUrl,
             tickets: input.tickets.map(ticket => ({
                 ...ticket,
                 price: parseFloat(ticket.price),
-                stock: parseInt(ticket.stock)
+                stock: parseInt(ticket.stock),
+                zone: ticket.zone.toUpperCase()
             }))
         };
         const result = await postEvent(eventData);
         console.log(eventData);
         console.log(result);
         if (result.error) {
-            alert(`${result.error}`);
+            if (result.error === "Invalid token") {
+                console.log("token invalido")
+            } else {
+                alert(result.error);
+            }
         } else {
             alert("Se creó el evento correctamente");
-            setInput({
-                name: "",
-                description: "",
-                imgUrl: "",
-                category: "",
-                date: "",
-                location: '',
-                tickets: [{ price: "", stock: "", zone: "" }],
-            });
+            router.push("/concerts");
         }
     };
 
@@ -153,8 +173,8 @@ const FormNewEvent = () => {
                         <div className='flex flex-col'>
                             <label htmlFor="category" className='text-gray-700 font-semibold my-2'>Categoría del evento*</label>
                             <select id='category' name='category' className='rounded-md' value={input.category} onChange={handleChange} >
-                            <option value="">Selecciona una categoría</option>
-                            {categories.map(category => (
+                                <option value="">Selecciona una categoría</option>
+                                {categories.map(category => (
                                     <option key={category.id} value={category.name}>{category.name}</option>
                                 ))}
                             </select>
@@ -174,7 +194,7 @@ const FormNewEvent = () => {
                             <input
                                 type="submit"
                                 value="Enviar"
-                                className='bg-red-600 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-700 transition duration-200 cursor-pointer max-[500px]:hidden' />
+                                className='bg-red-600 text-white font-semibold py-2 mt-4 rounded-md w-64 hover:bg-red-700 transition duration-300 cursor-pointer max-[500px]:hidden' />
                         </div>
 
                     </div>
