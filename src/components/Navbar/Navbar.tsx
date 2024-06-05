@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { UserData } from "@/interfaces/userData";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const protectedRoutes = ['/dashMyUser', '/dashAdmi']
 
@@ -16,6 +17,13 @@ export const Navbar = () => {
   const searchRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { user, error, isLoading } = useUser();
+
+  console.log({ user })
+
+  const token = user?.idToken;
+    console.log({token});
+
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -97,7 +105,7 @@ export const Navbar = () => {
 
           <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
             <div className="min-[769px]:hidden cursor-pointer" onClick={toggleModal}>
-              <img src="/menu.svg" alt="menu" className="h-9"/>
+              <img src="/menu.svg" alt="menu" className="h-9" />
             </div>
             <div>
               <Link href={"/"}>
@@ -114,10 +122,10 @@ export const Navbar = () => {
                 </div>
               ) : (
                 <button onClick={toggleSearch} className="max-[768px]:hidden">
-                  <img src="/search.svg" alt="buscador" className="h-7"/>
+                  <img src="/search.svg" alt="buscador" className="h-7" />
                 </button>
               )}
-              <img src="/shop.svg" alt="carrito" className="h-8"/>
+              <img src="/shop.svg" alt="carrito" className="h-8" />
             </div>
           </div>
         </div>
@@ -181,7 +189,7 @@ export const Navbar = () => {
                   </div>
                 ) : (
                   <button onClick={toggleSearch} className="hover:text-white">
-                    <img src="/search.svg" alt="carrito" className="h-7 pr-1"/>
+                    <img src="/search.svg" alt="carrito" className="h-7 pr-1" />
                   </button>
                 ))}
               {authUser ? (
@@ -193,7 +201,7 @@ export const Navbar = () => {
               ) : ""}
               <Link href={homePath}>
                 <span className=" hover:text-white transition duration-300">
-                  {authUser ? authUser.name.toLocaleUpperCase() : (<img src="/avatar.svg" alt="avatar" className="h-7"/>)}
+                  {authUser ? authUser.name.toLocaleUpperCase() : (<img src="/avatar.svg" alt="avatar" className="h-7" />)}
                 </span>
               </Link>
             </div>
@@ -225,17 +233,17 @@ export const Navbar = () => {
               <span className="hover:text-white transition duration-300">CONTACTO</span>
             </Link>
             <Link href={homePath}>
-                <span className="p-4 hover:text-white transition duration-300">
-                  {authUser ? authUser.name.toLocaleUpperCase() : "CUENTA"}
+              <span className="p-4 hover:text-white transition duration-300">
+                {authUser ? authUser.name.toLocaleUpperCase() : "CUENTA"}
+              </span>
+            </Link>
+            {authUser ? (
+              <div className="hover:text-white transition duration-300 cursor-pointer">
+                <span onClick={handleLogout}>
+                  CERRAR SESION
                 </span>
-              </Link>
-              {authUser ? (
-                <div className="hover:text-white transition duration-300 cursor-pointer">
-                  <span onClick={handleLogout}>
-                    CERRAR SESION
-                  </span>
-                </div>
-              ) : ""}
+              </div>
+            ) : ""}
           </div>
           <button
             onClick={toggleModal}
