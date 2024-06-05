@@ -3,10 +3,7 @@ import { IEvent } from "@/interfaces";
 import React, { useEffect, useState } from "react";
 import EventDetail from "./EventDetail";
 import CardEvents from "../CardEvents";
-import { eventPreLoad } from "@/helpers/eventPreLoad";
 import Link from "next/link";
-
-import page from "@/app/about/page";
 import { getEventsByDate } from "@/utils/events.util";
 
 const CardEventDetail = ({ event }: { event: IEvent }) => {
