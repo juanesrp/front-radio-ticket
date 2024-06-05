@@ -114,11 +114,11 @@ const Events = () => {
 
   return (
     <>
-      <header className="grid grid-cols-2 my-4 max-w-6xl mx-auto">
-        <div className="">
-          <p>Alguna descripción</p>
+      <header className="grid grid-cols-1 gap-2 sm:grid-cols-2 my-4 max-w-6xl mx-auto">
+        <div>
+          <p className="text-3xl font-bold text-center">PRÓXIMOS EVENTOS</p>
         </div>
-        <div className="flex justify-end gap-5">
+        <div className="flex justify-evenly sm:justify-end gap-5">
           <div className="flex flex-col ">
             <label htmlFor="filterByCategory" className="font-bold text-sm">
               FILTRAR POR CATEGORIA
@@ -145,7 +145,7 @@ const Events = () => {
               className="border-none p-2 w-full"
               onChange={handleSortChange}
             >
-              <option value="recentsToOlds">Más cerca</option>
+              <option value="recentsToOlds">Más cercanos</option>
               <option value="oldsToRecents">Más lejanos</option>
               <option value="alphabeticalAZ">Alfabéticamente, A-Z</option>
               <option value="alphabeticalZA">Alfabéticamente, Z-A</option>
