@@ -45,7 +45,7 @@ const Login: React.FC = () => {
       console.log({ res });
       if (res.status === 201) {
         const { token } = res.data;
-        // Decodificar el toke
+        // Decodificar el token
         const decodedToken = jwt.decode(token);
         localStorage.setItem("userSession", JSON.stringify({
           token: token,
@@ -57,10 +57,10 @@ const Login: React.FC = () => {
 
         if (decodedToken.isAdmin) {
           alert("Te has logeado correctamente")
-          router.push('/dashAdmi');
+          router.push('/');
         } else {
           alert("Te has logeado correctamente")
-          router.push('/dashMyUser');
+          router.push('/');
         }
       } else {
         alert(res.data.message);
