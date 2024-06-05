@@ -100,7 +100,10 @@ const Cart = () => {
           <table className="w-full">
             <tbody className="flex flex-col gap-2">
               {cart.map((event: any, index: number) => (
-                <tr className="bg-gray-50 flex items-center">
+                <tr
+                  key={event.event.id}
+                  className="bg-gray-50 flex items-center"
+                >
                   <td className="w-1/6 p-5">
                     <Link
                       href={`/events/${event.event.id}`}
