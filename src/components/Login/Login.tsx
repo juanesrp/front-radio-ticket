@@ -7,6 +7,7 @@ import Link from "next/link";
 import { validateLoginForms } from '@/helpers/validateForms';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 
+
 const Login: React.FC = () => {
   const router = useRouter();
   const jwt = require('jsonwebtoken');
@@ -15,6 +16,9 @@ const Login: React.FC = () => {
     password: '',
   };
 
+  const handleRedirect = () => {
+    window.location.href = '/api/auth/login?connection=googlex';
+  };
   const [dataUser, setDataUser] = useState<LoginProps>(loginData);
   const [errorUser, setErrorUser] = useState<LoginErrorProps>(loginData);
   const [showPassword, setShowPassword] = useState(false)
@@ -135,7 +139,10 @@ const Login: React.FC = () => {
             <span className="px-4 bg-white text-gray-500 text-lg">OR</span>
           </div>
         </div>
-        <button className="w-full py-3 mb-6 bg-white text-gray-600 font-semibold rounded-md border border-gray-300 hover:bg-gray-100 transition duration-200 flex items-center justify-center text-xl">
+        <button
+          onClick={handleRedirect}
+          className="w-full py-3 mb-6 bg-white text-gray-600 font-semibold rounded-md border border-gray-300 hover:bg-gray-100 transition duration-200 flex items-center justify-center text-xl"
+        >
           <svg className="w-7 h-7 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path
               fillRule="evenodd"
@@ -154,7 +161,6 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-}
-
+};
 
 export default Login;

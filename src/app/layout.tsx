@@ -22,16 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-      <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
-          <div className="flex-grow">
-            <Navbar/>
-            {children}
+        <body className={inter.className}>
+          <div className="flex flex-col min-h-screen">
+            <div className="flex-grow">
+              <Navbar />
+              {children}
+            </div>
+            <MyFooter />
           </div>
-          <MyFooter/>
-        </div>
         </body>
-        </UserProvider>
+      </UserProvider>
     </html>
   );
 }

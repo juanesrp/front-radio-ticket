@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/interfaces/userData";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
+import axios from "axios";
 import { ICartItem } from "@/interfaces";
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
@@ -18,10 +19,52 @@ export const Navbar = () => {
   const searchRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { user, error, isLoading } = useUser();
+  const jwt = require('jsonwebtoken');
+  const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
 
-  console.log({ user });
+
+  useEffect(() => {
+    const sendUser = async (user: UserProfile) => {
+      try {
+        const res = await axios.post('http://localhost:3001/auth/auth0', user);
+        if (res.status === 201) {
+          const { token } = res.data;
+          // Decodificar el token
+          const decodedToken = jwt.decode(token);
+          const userSession = {
+            token: token,
+            name: decodedToken.name,
+            email: decodedToken.email,
+            isAdmin: decodedToken.isAdmin,
+            isSuperAdmin: decodedToken.isSuperAdmin
+          }
+          localStorage.setItem("userSession", JSON.stringify(userSession));
+
+          if (userSession) {
+            setAuthUser(userSession);
+            alert("Te has logeado correctamente")
+          }
+        } else {
+          alert(res.data.message);
+        }
+      } catch (error: any) {
+        console.error('Error sending user:', error);
+        if (error.response && error.response.data && error.response.data.message) {
+          alert("Error: " + error.response.data.message);
+        } else {
+          alert("An unexpected error occurred.");
+        }
+      };
+    };
+    const token = localStorage.getItem('userSession')
+    if (!token && user?.sid) {
+      sendUser(user)
+    }
+
+  }, [
+    user?.sid
+  ])
 
   const token = user?.idToken;
   console.log({ token });
@@ -90,8 +133,8 @@ export const Navbar = () => {
     ? authUser.isSuperAdmin
       ? "/dashSuperAdmin"
       : authUser.isAdmin
-      ? "/dashAdmi"
-      : "/dashMyUser"
+        ? "/dashAdmi"
+        : "/dashMyUser"
     : "/login";
 
   const handleLogout = () => {
@@ -100,9 +143,7 @@ export const Navbar = () => {
       window.alert("Sesión cerrada");
 
       localStorage.removeItem("userSession");
-      localStorage.removeItem("cart");
-
-      window.location.href = "/";
+      window.location.href = "/api/auth/logout";
     } else {
       window.alert("Cancelado");
     }
@@ -117,11 +158,10 @@ export const Navbar = () => {
     <>
       <div className="bg-black">
         <div
-          className={`${
-            isFixed
-              ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
-              : "relative"
-          }`}
+          className={`${isFixed
+            ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
+            : "relative"
+            }`}
         >
           <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
             <div
@@ -158,54 +198,49 @@ export const Navbar = () => {
           </div>
         </div>
         <div
-          className={`${
-            isFixed
-              ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
-              : "relative"
-          }`}
+          className={`${isFixed
+            ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
+            : "relative"
+            }`}
         >
           <div className="text-[#ffffff9b] pr-5 pl-2 flex justify-between max-w-7xl mx-auto max-[768px]:hidden">
             <div className="py-5 text-sm">
               <Link href={"/"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   INICIO
                 </span>
               </Link>
               <Link href={"/concerts"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/concerts"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/concerts"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   PROXIMOS EVENTOS
                 </span>
               </Link>
               <Link href={"/about"}>
                 <span
-                  className={`p-4  hover:text-white transition duration-300 ${
-                    pathname === "/about"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4  hover:text-white transition duration-300 ${pathname === "/about"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   ACERCA DE LA PAGINA
                 </span>
               </Link>
               <Link href={"/contact"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/contact"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/contact"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   CONTACTO
                 </span>
@@ -247,17 +282,15 @@ export const Navbar = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${
-          isOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${isOpen
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+          }`}
       >
         <div
           ref={sidebarRef}
-          className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <input
             type="search"
