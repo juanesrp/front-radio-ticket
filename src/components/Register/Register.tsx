@@ -86,6 +86,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {errorUser.name && <p className="text-lg italic text-red-500">{errorUser.name}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="lastName" className="block text-gray-700 font-semibold mb-2 text-xl">
@@ -99,6 +100,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {errorUser.lastName && <p className="text-lg italic text-red-500">{errorUser.lastName}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="phone" className="block text-gray-700 font-semibold mb-2 text-xl">
@@ -112,6 +114,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {errorUser.phone && <p className="text-lg italic text-red-500">{errorUser.phone}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="email" className="block text-gray-700 font-semibold mb-2 text-xl">
@@ -125,6 +128,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {errorUser.email && <p className="text-lg italic text-red-500">{errorUser.email}</p>}
                 </div>
                 <div className="mb-2">
                     <label htmlFor="password" className="block text-gray-700 font-semibold mb-2 text-xl">
@@ -138,6 +142,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {errorUser.password && <p className="text-lg italic text-red-500">{errorUser.password}</p>}
                 </div>
                 <div>
                     <p className="mb-3 mt-0 text-sm text-gray-600"> La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!@#$%^&*), y tener entre 8 y 15 caracteres de longitud.</p>
@@ -154,6 +159,7 @@ const Register: React.FC = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
+                    {errorUser.confirmPassword && <p className="text-lg italic text-red-500">{errorUser.confirmPassword}</p>}
                 </div>
                 <div className="flex justify-center">
                     <button type="submit" className="w-80 py-2 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition duration-200 text-xl">
