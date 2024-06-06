@@ -9,6 +9,7 @@ import { getEventsByDate } from "@/utils/events.util";
 const CardEventDetail = ({ event }: { event: IEvent }) => {
   const eventsPerPage = 5;
   const [events, setEvents] = useState<IEvent[]>([]);
+  console.log("Estoy en la componente", event);
 
   const fetchEvents = async (page: number) => {
     try {

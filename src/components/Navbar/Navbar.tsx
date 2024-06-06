@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/interfaces/userData";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { ICartItem } from "@/interfaces";
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
 
@@ -18,6 +19,7 @@ export const Navbar = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { user, error, isLoading } = useUser();
+  const [cart, setCart] = useState<ICartItem[]>([]);
 
   console.log({ user });
 
@@ -105,6 +107,11 @@ export const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(storedCart);
+  }, []);
+
   return (
     <>
       <div className="bg-black">
@@ -140,8 +147,11 @@ export const Navbar = () => {
                   <img src="/search.svg" alt="buscador" className="h-7" />
                 </button>
               )}
-              <Link href="/cart">
+              <Link href="/cart" className="relative">
                 <img src="/shop.svg" alt="carrito" className="h-8" />
+                {cart.length > 0 && (
+                  <span className="absolute top-2 right-1 bg-red-600 text-white rounded-full w-3 h-3 flex justify-center items-center text-xs"></span>
+                )}
               </Link>
             </div>
           </div>
