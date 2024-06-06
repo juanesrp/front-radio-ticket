@@ -26,15 +26,16 @@ export interface ICategory {
 
 export type IEventResponse = IEvent[] | { error: string };
 export interface ICartItem {
-  event: {
+  id: string;
+  imgUrl: string;
+  date: string;
+  name: string;
+  ticket: {
     id: string;
-    imgUrl: string;
-    date: string;
-    name: string;
+    price: number;
+    zone: string;
+    quantity: number;
   };
-  selectedZone: string;
-  selectedPrice: number;
-  quantity: number;
 }
 
 export interface CreateDiscountProps {
