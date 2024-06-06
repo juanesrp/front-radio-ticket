@@ -36,3 +36,7 @@ export interface ICartItem {
   selectedPrice: number;
   quantity: number;
 }
+
+export interface CreateDiscountProps {
+  events: IEvent[];
+}

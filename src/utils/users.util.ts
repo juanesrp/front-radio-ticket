@@ -29,6 +29,12 @@ export const getUsers = async (page: number, limit: number) => {
         })
         return res.data
     } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.data.message === "Invalid token") {
+                return { error: "Invalid token" }
+            }
+            return { error: error.response.data.message };
+        }
         console.log("user error", error);
 
     }
