@@ -16,12 +16,6 @@ const User = () => {
 
   return (
     <>
-    {authUser && authUser.isSuperAdmin ? (
-                <div className='flex gap-3'>
-                    <Link href={"/dashAdmi"} className='bg-red-600 hover:bg-red-700 p-2 text-white'>Perfil de admin</Link>
-                    <Link href={"/dashSuperAdmin"} className='bg-red-600 hover:bg-red-700 p-2 text-white'>Perfil de Super admin</Link>
-                </div>
-            ) : ""}
     <div className='max-w-6xl mx-auto pb-10 px-5'>
             <h1 className='text-5xl pt-10 pb-4'>Mi Cuenta</h1>
             

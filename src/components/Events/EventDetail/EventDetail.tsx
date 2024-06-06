@@ -19,7 +19,23 @@ const EventDetail = ({ event }: { event: IEvent }) => {
   const handleBuy = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (userSession) {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      cart.push({ event, quantity, selectedZone, selectedPrice });
+      const ticket = event.tickets.find(
+        (ticket) => ticket.zone === selectedZone
+      );
+      const newCart = {
+        id: event.id,
+        name: event.name,
+        imgUrl: event.imgUrl,
+        date: formatDate(event.date),
+        ticket: {
+          id: ticket?.id,
+          price: ticket?.price,
+          zone: ticket?.zone,
+          quantity: quantity,
+        },
+      };
+
+      cart.push(newCart);
       localStorage.setItem("cart", JSON.stringify(cart));
       alert("Se agrego al carrito");
     } else {
