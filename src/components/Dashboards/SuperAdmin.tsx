@@ -38,6 +38,7 @@ function SuperAdmin() {
                         if (res.error === "Invalid token") {
                             alert("El token es inválido. Vuelve a iniciar sesión.");
                             localStorage.removeItem("userSession");
+                            localStorage.removeItem("cart");
                             window.location.href = "/login";
                         }
                     } else {

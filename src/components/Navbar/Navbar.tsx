@@ -100,6 +100,7 @@ export const Navbar = () => {
       window.alert("Sesión cerrada");
 
       localStorage.removeItem("userSession");
+      localStorage.removeItem("cart");
 
       window.location.href = "/";
     } else {
