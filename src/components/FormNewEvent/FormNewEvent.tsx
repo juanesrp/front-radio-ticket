@@ -109,6 +109,7 @@ const FormNewEvent = () => {
                     if (res.error === "Invalid token") {
                         alert("El token es inválido. Vuelve a iniciar sesion.");
                         localStorage.removeItem("userSession");
+                        localStorage.removeItem("cart");
                         window.location.href = "/login";
                     } else {
                         alert(res.error);
