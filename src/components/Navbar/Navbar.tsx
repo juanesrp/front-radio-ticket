@@ -216,7 +216,7 @@ export const Navbar = () => {
                 ))}
               {authUser ? (
                 <div className="hover:text-white transition duration-300 cursor-pointer pr-5">
-                  <span onClick={handleLogout}>CERRAR SESION</span>
+                  <span onClick={handleLogout} className="text-[0.8rem]">CERRAR SESION</span>
                 </div>
               ) : (
                 ""
@@ -288,7 +288,7 @@ export const Navbar = () => {
           </div>
           <button
             onClick={toggleModal}
-            className="mt-4 border-red-600 text-white p-2 rounded"
+            className="mt-4 bg-red-600 text-white p-2 rounded"
           >
             Cerrar
           </button>

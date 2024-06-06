@@ -2,6 +2,7 @@
 import { IEvent } from '@/interfaces';
 import { UserData } from '@/interfaces/userData';
 import { getEventsOfAdmin } from '@/utils/events.util';
+import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';
@@ -22,13 +23,11 @@ const Admin = () => {
                 try {
                     const eventsData = await getEventsOfAdmin();
                     if ('error' in eventsData) {
-                        if (eventsData.error === "Token no encontrado en userSesion" || eventsData.error === "No se encontró userSesion en el localStorage") {
+                        if (eventsData.error === "Invalid token") {
                             alert("El token es inválido. Vuelve a iniciar sesión.");
                             localStorage.removeItem("userSession");
                             window.location.href = "/login";
-                        } else {
-                            alert(`Error al obtener eventos: ${eventsData.error}`);
-                        }
+                        } 
                     } else {
                         setEvents(eventsData);
                     }
@@ -40,14 +39,10 @@ const Admin = () => {
 
         fetchUserData();
     }, [router]);
+    console.log();
+    
     return (
         <>
-            {authUser && authUser.isSuperAdmin ? (
-                <div className='flex gap-3'>
-                    <Link href={"/dashMyUser"} className='bg-red-600 hover:bg-red-700 p-2 text-white'>Perfil de usuario</Link>
-                    <Link href={"/dashSuperAdmin"} className='bg-red-600 hover:bg-red-700 p-2 text-white'>Perfil de Super admin</Link>
-                </div>
-            ) : ""}
 
             <div className='max-w-6xl mx-auto pb-10 px-5'>
                 <h1 className='text-5xl pt-10 pb-4'>Mi Cuenta</h1>
@@ -62,29 +57,21 @@ const Admin = () => {
                         ) : (
                             <ul>
                                 {events && events.map(event => (
-                                    <li key={event.id} className='flex flex-col p-2'>
-                                        <div className='bg-white p-3 shadow-md rounded-md flex flex-col lg:flex-row md:justify-between md:items-center'>
-                                            <p>{event.name.toLocaleUpperCase()}</p>
-                                            <p>{event.date}</p>                                               
-                                            <p>Tickets:</p>
-                                            <ul>
-                                                {event.tickets.map(ticket => (
-                                                    <li key={ticket.id} className='bg-gray-100 shadow p-1 rounded-md'>
-                                                        <p>Zona: {ticket.zone.toLocaleUpperCase()}</p>
-                                                        <p>Stock: {ticket.stock}</p>
-                                                        <p>Precio: {ticket.price}</p>
-                                                        <button className='bg-red-600 max-[768px]:w-auto text-white font-semibold py-2 rounded-md w-64 hover:bg-red-700 transition duration-300 mb-2'>Agregar descuento</button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            
-                                        </div>
+                                    <li key={event.id} className='p-2'>
+                                        <div className='bg-white p-3 shadow-md rounded-md md:flex-row justify-between items-center flex flex-col font-bold gap-3'>
+                                            <div className='flex flex-col justify-center p-5 bg-gray-100 rounded-md shadow items-center lg:ml-10'>
+                                                <p>{event.name.toLocaleUpperCase()}</p>
+                                                <p>{formatDate(event.date)}</p>
+                                                <Link href={`/dashAdmi/${event.id}`}><button className='bg-red-600 hover:bg-red-700 transition duration-300 rounded p-2 w-32 text-base text-white'>Ver detalle</button></Link>
+                                            </div>
+                                               <img src={event.imgUrl} alt={event.name} className='md:w-[40%] w-[70%] rounded-md '/>                                         
+                                        </div> 
                                     </li>
                                 ))}
                             </ul>
                         )}
                     </div>
-                    <div className='md:col-span-1 bg-gray-100 p-8 rounded self-start'>
+                    <div className='md:col-span-1 bg-gray-100 p-8 rounded break-words self-start'>
                         <h2 className='font-bold'>Detalles de la cuenta</h2>
                         <p>{authUser?.name}</p>
                         <p>{authUser?.email}</p>

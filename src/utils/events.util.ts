@@ -46,6 +46,12 @@ export const getEventsOfAdmin = async (): Promise<IEventResponse> => {
     const events: IEvent[] = res.data;
     return events;
   } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.data.message === "Invalid token") {
+        return { error: "Invalid token" }
+      }
+      return { error: error.response.data.message };
+    }
     throw new Error("Ocurrio un error: " + error);
   }
 };
@@ -54,6 +60,7 @@ export const getEventById = async (id: string) => {
   try {
     const res = await axios.get(`${api}/events/${id}`);
     const event: IEvent = res.data;
+    console.log("🚀 ~ getEventById ~ event:", event)
     return event;
   } catch (error: any) {
     throw new Error(error);
@@ -227,8 +234,6 @@ export const postImage = async (formData: FormData): Promise<AxiosResponse<any, 
     const res = await axios.post(`${api}/cloudinary`, formData, config);
     return res
   } catch (error: any) {
-    console.log(error);
-
     if (axios.isAxiosError(error) && error.response) {
       if (error.response.data.message === "Invalid token") {
         return { error: "Invalid token" }
