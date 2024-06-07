@@ -41,3 +41,10 @@ export interface ICartItem {
 export interface CreateDiscountProps {
   events: IEvent[];
 }
+
+export interface DiscuontResponse {
+  data: {
+    code: string
+    discount: number
+  }
+}

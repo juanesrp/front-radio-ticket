@@ -141,8 +141,8 @@ export const Navbar = () => {
     const isConfirmed = window.confirm("¿Estás seguro? Vas a cerrar sesión!!");
     if (isConfirmed) {
       window.alert("Sesión cerrada");
-
       localStorage.removeItem("userSession");
+      localStorage.removeItem("cart")
       window.location.href = "/api/auth/logout";
     } else {
       window.alert("Cancelado");
