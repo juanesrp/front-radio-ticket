@@ -1,5 +1,5 @@
-import axios from "axios";
-import { IEvent } from "@/interfaces";
+import axios, { AxiosResponse } from "axios";
+import { IEvent, IEventResponse } from "@/interfaces";
 import { log } from "console";
 const api = process.env.NEXT_PUBLIC_API;
 
@@ -22,10 +22,45 @@ export const getEvents = async (
   }
 };
 
+export const getEventsOfAdmin = async (): Promise<IEventResponse> => {
+  try {
+    const userSesion = localStorage.getItem("userSession");
+    let token: string | null = null;
+
+    if (userSesion) {
+      const userSesionToken = JSON.parse(userSesion);
+      token = userSesionToken ? userSesionToken.token : null;
+    } else {
+      return { error: "No se encontró userSesion en el localStorage" };
+    }
+
+    if (!token) {
+      return { error: "Token no encontrado en userSesion" };
+    }
+    const res = await axios.get(`${api}/events/ofadmin`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const events: IEvent[] = res.data;
+    return events;
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.data.message === "Invalid token") {
+        return { error: "Invalid token" }
+      }
+      return { error: error.response.data.message };
+    }
+    throw new Error("Ocurrio un error: " + error);
+  }
+};
+
 export const getEventById = async (id: string) => {
   try {
     const res = await axios.get(`${api}/events/${id}`);
     const event: IEvent = res.data;
+    console.log("🚀 ~ getEventById ~ event:", event)
     return event;
   } catch (error: any) {
     throw new Error(error);
@@ -164,24 +199,50 @@ export const postEvent = async (eventData: {
     const res = await axios.post(`${api}/events`, eventData, config);
     return res.data;
   } catch (error: any) {
+
     if (axios.isAxiosError(error) && error.response) {
+      if (error.response.data.message === "Invalid token") {
+        return { error: "Invalid token" }
+      }
       return { error: error.response.data.message };
     }
     return { error: "Error desconocido al crear el evento" };
   }
 };
 
-export const postImage = async (formData: FormData) => {
+export const postImage = async (formData: FormData): Promise<AxiosResponse<any, any> | { error: string; }> => {
   try {
-    const res = await axios.post(`${api}/cloudinary`, formData);
+    const userSesion = localStorage.getItem("userSession");
+    let token: string | null = null;
+
+    if (userSesion) {
+      const userSesionToken = JSON.parse(userSesion);
+      token = userSesionToken ? userSesionToken.token : null;
+    } else {
+      return { error: "No se encontró userSesion en el localStorage" };
+    }
+
+    if (!token) {
+      return { error: "Token no encontrado en userSesion" };
+    }
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await axios.post(`${api}/cloudinary`, formData, config);
     return res
   } catch (error: any) {
-    if (axios.isAxiosError(error)) {
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.data.message === "Invalid token") {
+        return { error: "Invalid token" }
+      }
       const axiosError = error;
       if (axiosError.response && axiosError.response.status === 400) {
-        alert("La imagen es demasiado grande");
+        return { error: "La imagen es demasiado grande" };
       }
     }
-    throw error;
+    return { error: "Error al subir la imagen" };
   }
 }

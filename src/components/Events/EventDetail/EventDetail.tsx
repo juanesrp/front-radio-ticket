@@ -1,11 +1,48 @@
 import { IEvent } from "@/interfaces";
-import React, { useState } from "react";
+import { formatDate } from "@/utils/formatDate";
+import { Alert } from "flowbite-react";
+import React, { useEffect, useState } from "react";
 
 const EventDetail = ({ event }: { event: IEvent }) => {
   const [selectedZone, setSelectedZone] = useState(event.tickets[0].zone);
   const [selectedPrice, setSelectedPrice] = useState(event.tickets[0].price);
   const [quantity, setQuantity] = useState(1);
+  const [userSession, setUserSession] = useState();
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const userToken = localStorage.getItem("userSession");
+      setUserSession(JSON.parse(userToken!));
+    }
+  }, []);
+
+  const handleBuy = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (userSession) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const ticket = event.tickets.find(
+        (ticket) => ticket.zone === selectedZone
+      );
+      const newCart = {
+        id: event.id,
+        name: event.name,
+        imgUrl: event.imgUrl,
+        date: formatDate(event.date),
+        ticket: {
+          id: ticket?.id,
+          price: ticket?.price,
+          zone: ticket?.zone,
+          quantity: quantity,
+        },
+      };
+
+      cart.push(newCart);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("Se agrego al carrito");
+    } else {
+      alert("Debes iniciar sesion");
+      window.location.href = "/login";
+    }
+  };
   // Manejar el cambio de zona
   const handleZoneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const zone = e.target.value;
@@ -38,7 +75,7 @@ const EventDetail = ({ event }: { event: IEvent }) => {
         <div className="grid-cols-1">
           <div className="flex flex-col mt-5 text-center md:text-left ">
             <h1 className="text-3xl font-bold">
-              {event.date} | {event.name}
+              {formatDate(event.date)} | {event.name}
             </h1>
             <h2 className="text-lg font-normal">${selectedPrice}</h2>
           </div>
@@ -86,7 +123,10 @@ const EventDetail = ({ event }: { event: IEvent }) => {
               </div>
             </div>
             <div className="flex w-full mt-4 lg:w-1/3 lg:items-end">
-              <button className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700">
+              <button
+                onClick={handleBuy}
+                className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700"
+              >
                 AGREGAR AL CARRITO
               </button>
             </div>
