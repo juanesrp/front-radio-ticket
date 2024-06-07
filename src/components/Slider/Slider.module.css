@@ -1,0 +1,55 @@
+.div {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.container h1 {
+    display: flex;
+    justify-content: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+}
+
+.inner {
+    width: fit-content;
+    display: flex;
+    animation: loop 30s linear infinite;
+}
+
+.tag {
+    display: flex;
+    background-color: #e1e1e2;
+    padding: 0.5rem 0.8rem;
+    margin: 1rem;
+    box-shadow: 0 0.1rem 0.2rem #00000033, 0 0.1rem 0.5rem #0000004d, 0 0.2rem 1.5rem #00000066;
+}
+
+.tag img {
+    width: 12rem;
+    aspect-ratio: 3/3;
+    max-width: none !important;
+}
+
+.fade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+@keyframes loop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}

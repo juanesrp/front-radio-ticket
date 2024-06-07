@@ -1,8 +1,11 @@
+import Slice from '@/components/Slider/Slider'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>Sobre la pagina</div>
+    <>
+    <Slice/>
+    </>
   )
 }
 
