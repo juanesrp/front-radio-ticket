@@ -5,7 +5,7 @@ import { formatDate } from '@/utils/formatDate'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
-const CreateDiscount = ({ event }: { event: IEvent }) => {
+const CreateDiscountSuperAdmin = ({ event }: { event: IEvent }) => {
   const [discount, setDiscount] = useState('');
   const [code, setCode] = useState<DiscuontResponse['data'] | null>(null)
 
@@ -33,11 +33,10 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
     }
 
   }
-
-
+    
   return (
     <>
-      <div className='bg-gray-50'>
+    <div className='bg-gray-50'>
         <div className='flex md:flex-row flex-col max-[768px]:items-center md:justify-between py-10 max-w-4xl mx-auto'>
           <div>
             <img src={event.imgUrl} alt={event.name} className="w-full max-w-96" />
@@ -77,12 +76,11 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
           </div>
         </div>
       </div>
-      <div className='flex justify-center text-3xl p-9'>
-        <Link href={"/dashAdmi"} className='hover:text-red-600 transition duration-300'>VOLVER AL PERFIL</Link>
-      </div>
+        <div className='flex justify-center text-3xl p-9'>
+          <Link href={"/dashSuperAdmin"} className='hover:text-red-600 transition duration-300'>VOLVER AL PERFIL</Link>
+        </div>
     </>
   )
 }
 
-
-export default CreateDiscount
+export default CreateDiscountSuperAdmin
