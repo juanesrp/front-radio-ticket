@@ -2,6 +2,8 @@ import axios from "axios";
 const api = process.env.NEXT_PUBLIC_API;
 
 export const createOrder = async (order: any) => {
+  console.log("Estoy en el createOrder", order);
+
   try {
     const userSesion = localStorage.getItem("userSession");
     let token: string | null = null;
