@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { IEvent } from '@/interfaces';
 import { User } from '@/interfaces/user';

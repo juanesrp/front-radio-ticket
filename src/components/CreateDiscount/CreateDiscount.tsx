@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { Discount, IEvent } from '@/interfaces'
 import { getDiscountId, postDiscount } from '@/utils/discount.util'

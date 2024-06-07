@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import styles from "./Slider.module.css"
 
 const Slice = () => {
