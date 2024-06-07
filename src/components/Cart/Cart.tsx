@@ -12,7 +12,8 @@ const Cart = () => {
   const [total, setTotal] = useState(0);
   const [discountCode, setDiscountCode] = useState("");
   const [discounts, setDiscounts] = useState<{ [key: string]: number }>({});
-  console.log(discounts);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  console.log(paymentMethod);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -111,6 +112,10 @@ const Cart = () => {
 
   const sendOrder = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (!paymentMethod) {
+      alert("Debes seleccionar un metodo de pago");
+      return;
+    }
     try {
       const order = {
         tickets: cart.map((event) => ({
@@ -118,34 +123,48 @@ const Cart = () => {
           quantity: event.ticket.quantity,
           price: getPriceWithDiscount(event.ticket.price, event.id),
         })),
+        paymentMethod: paymentMethod,
       };
-
       const data = await createOrder(order);
-      window.open(data.init_point, "_blank");
+      if (paymentMethod === "mercadopago") {
+        window.open(data.init_point, "_blank");
+      } else {
+        window.open(data.href, "_blank");
+      }
+      console.log("Este es el data", data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handlePaymentMethodChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPaymentMethod(e.target.value);
+  };
+
   return (
     <div className="grid grid-cols-1">
       {cart.length ? (
         <div className="max-w-6xl w-full mx-auto p-5">
-          <h1>Cart</h1>
           <form className="w-full">
             <table className="w-full">
               <tbody className="flex flex-col gap-2">
                 {cart.map((event: any, index: number) => (
-                  <tr key={event.id} className="bg-gray-50 flex items-center">
-                    <td className="w-1/6 p-5">
-                      <Link href={`/concerts/${event.id}`} className="max-w-36">
+                  <tr
+                    key={event.id}
+                    className="bg-gray-50 flex flex-col  md:flex-row items-center"
+                  >
+                    <td className=" md:w-1/6 p-5">
+                      <Link href={`/concerts/${event.id}`} className="max-w-32">
                         <img src={event.imgUrl} alt="Event.image" />
                       </Link>
                     </td>
-                    <td className="w-4/6 p-5">
+                    <td className="w-4/6 p-5 text-center md:text-left">
                       <h3 className="font-bold text-lg">
                         {event.date} | {event.name}
                       </h3>
-                      <p>{event.selectedZone}</p>
+                      <p>{event.ticket.zone}</p>
                       <p
                         className="text-red-600 mt-3"
                         onClick={() => removeEvent(index)}
@@ -178,10 +197,10 @@ const Cart = () => {
                     <td className="w-1/6 text-right text-base p-5">
                       {discounts[event.id] ? (
                         <div>
-                          <span className="line-through text-red-600">
+                          <span className="line-through text-lg">
                             ${event.ticket.price * event.ticket.quantity}
                           </span>{" "}
-                          <span>
+                          <span className="text-red-600 text-lg">
                             $
                             {getPriceWithDiscount(
                               event.ticket.price,
@@ -190,7 +209,7 @@ const Cart = () => {
                           </span>
                         </div>
                       ) : (
-                        <span>
+                        <span className="text-lg">
                           ${event.ticket.price * event.ticket.quantity}
                         </span>
                       )}
@@ -199,8 +218,55 @@ const Cart = () => {
                 ))}
               </tbody>
             </table>
-            <div className="flex justify-end">
-              <div className="flex flex-col p-5 gap-3 w-1/2">
+            <div className="flex flex-col-reverse md:flex-row mt-4">
+              <div className="w-full md:w-1/2 flex flex-col gap-2 p-5">
+                <h1 className="font-bold text-xl">Métodos de pago</h1>
+                <p className="text-sm">
+                  Selecciona tu metodo de pago para continuar, si estas en
+                  Argentina podras pagar con mercado pago
+                </p>
+                <div className="flex gap-4 justify-around mt-4">
+                  <div className="w-28">
+                    <input
+                      type="radio"
+                      id="paypal"
+                      name="paymentMethod"
+                      value="paypal"
+                      className="hidden peer"
+                      onChange={handlePaymentMethodChange}
+                    />
+                    <label
+                      htmlFor="paypal"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-gray-100 bg-white p-4 cursor-pointer hover:bg-gray-100 peer-checked:border-gray-900"
+                    >
+                      <img src="/PayPal.png" alt="paypal" />
+                    </label>
+                  </div>
+                  <div className="w-28">
+                    <input
+                      type="radio"
+                      id="mercadopago"
+                      name="paymentMethod"
+                      value="mercadopago"
+                      className="hidden peer"
+                      onChange={handlePaymentMethodChange}
+                    />
+                    <label
+                      htmlFor="mercadopago"
+                      className="flex flex-col items-center justify-between rounded-md border-2 border-gray-100 bg-white p-4 cursor-pointer hover:bg-gray-100  peer-checked:border-gray-900"
+                    >
+                      <img src="/mercadopago.webp" alt="mercadopago" />
+                    </label>
+                  </div>
+                </div>
+                <button
+                  onClick={sendOrder}
+                  className="bg-red-600 text-white p-2 mt-3 max-h-12 text-center text-base hover:bg-red-700 "
+                >
+                  IR A PAGAR
+                </button>
+              </div>
+              <div className="flex flex-col p-5 gap-3 w-full md:w-1/2">
                 <div className="flex justify-between w-full">
                   <h1>Subtotal:</h1>
                   <p>
@@ -244,12 +310,6 @@ const Cart = () => {
                     APLICAR
                   </button>
                 </div>
-                <button
-                  onClick={sendOrder}
-                  className="bg-red-600 text-white p-2 max-h-12 text-center text-base hover:bg-red-700 "
-                >
-                  FINALIZAR PEDIDO
-                </button>
               </div>
             </div>
           </form>

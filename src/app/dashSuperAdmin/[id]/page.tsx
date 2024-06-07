@@ -1,18 +1,21 @@
-import CreateDiscountSuperAdmin from '@/components/CreateDiscount/CreateDiscountSuperAdmin';
-import { IEvent } from '@/interfaces';
-import { getEventById } from '@/utils/events.util';
-import React from 'react'
+import CreateDiscountSuperAdmin from "@/components/CreateDiscount/CreateDiscountSuperAdmin";
+import { IEvent } from "@/interfaces";
+import { getEventById } from "@/utils/events.util";
+import React from "react";
 
 const page = async ({ params }: { params: { id: string } }) => {
-    
-    const event: IEvent = await getEventById(params.id);
+  const event: IEvent = await getEventById(params.id);
   return (
     <>
-    <div className="bg-gray-50">
-      {event ? <CreateDiscountSuperAdmin event={event} /> : "No se encontro el evento"}
-    </div>
+      <div>
+        {event ? (
+          <CreateDiscountSuperAdmin event={event} />
+        ) : (
+          "No se encontro el evento"
+        )}
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;
