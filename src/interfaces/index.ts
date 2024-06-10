@@ -42,9 +42,12 @@ export interface CreateDiscountProps {
   events: IEvent[];
 }
 
+export interface Discount {
+  id: string;
+  code: string;
+  discount: number;
+}
+
 export interface DiscuontResponse {
-  data: {
-    code: string
-    discount: number
-  }
+  data: Discount;
 }
