@@ -10,6 +10,7 @@ import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
 import axios from "axios";
 import { ICartItem } from "@/interfaces";
 import { refresh } from "@/utils/refresh";
+const api = process.env.NEXT_PUBLIC_API;
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
 
@@ -30,7 +31,7 @@ export const Navbar = () => {
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
       try {
-        const res = await axios.post('http://localhost:3001/auth/auth0', user);
+        const res = await axios.post(`${api}/auth/auth0`, user);
         if (res.status === 201) {
           const { token } = res.data;
           // Decodificar el token
@@ -148,7 +149,10 @@ export const Navbar = () => {
         } catch (error: any) {
           if (error.message === 'Token expired') {
             console.error("Token expired, logging out user...");
-            handleLogout(); 
+            window.alert("Sesión cerrada");
+            localStorage.removeItem("userSession");
+            localStorage.removeItem("cart")
+            window.location.href = "/api/auth/logout";
           } else {
             console.error("Failed to refresh token:", error);
           }
