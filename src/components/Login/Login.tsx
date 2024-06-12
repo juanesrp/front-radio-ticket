@@ -8,6 +8,7 @@ import { validateLoginForms } from '@/helpers/validateForms';
 import { FaEyeSlash, FaEye, } from 'react-icons/fa';
 import { BiCheck } from 'react-icons/bi';
 import {  toast } from "sonner"
+const api = process.env.NEXT_PUBLIC_API;
 
 
 
@@ -44,7 +45,7 @@ const Login: React.FC = () => {
       return false;
     }
     try {
-      const res = await axios.post('http://localhost:3001/auth/login', dataUser, {
+      const res = await axios.post(`${api}/auth/login`, dataUser, {
         headers: {
           'Content-Type': 'application/json'
         }
