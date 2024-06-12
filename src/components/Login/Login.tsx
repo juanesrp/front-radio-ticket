@@ -69,16 +69,16 @@ const Login: React.FC = () => {
           router.push('/');
         } else {
           toast("Te has logueado correctamente",{
-            icon: <BiCheck style={{color: "green"}}/> 
+            icon: <BiCheck style={{color: "green", fontSize: "50px"}}/> 
           }); 
           router.push('/');
         }
       } else {
-        toast.error(res.data.message); // Utilizar toast en lugar de alert
+        toast.error(res.data.message); 
       }
     } catch (error: any) {
       console.error("Error:", error.response.data);
-      toast.error("Error: " + error.response.data.message); // Utilizar toast en lugar de alert
+      toast.error("Error: " + error.response.data.message); 
       throw new Error(error);
     }
   };
