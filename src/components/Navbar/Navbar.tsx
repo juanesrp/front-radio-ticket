@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
@@ -7,6 +9,7 @@ import { UserData } from "@/interfaces/userData";
 import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
 import axios from "axios";
 import { ICartItem } from "@/interfaces";
+import { refresh } from "@/utils/refresh";
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
 
@@ -136,6 +139,23 @@ export const Navbar = () => {
         ? "/dashAdmi"
         : "/dashMyUser"
     : "/login";
+
+    useEffect(() => {
+      const checkTokenExpiration = async () => {
+        try {
+          await refresh(); // Intenta actualizar el token
+          console.log("Token refreshed successfully");
+        } catch (error: any) {
+          if (error.message === 'Token expired') {
+            console.error("Token expired, logging out user...");
+            handleLogout(); 
+          } else {
+            console.error("Failed to refresh token:", error);
+          }
+        }
+      };
+      checkTokenExpiration();
+    }, []);
 
   const handleLogout = () => {
     const isConfirmed = window.confirm("¿Estás seguro? Vas a cerrar sesión!!");

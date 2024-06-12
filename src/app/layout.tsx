@@ -4,6 +4,7 @@ import "./globals.css";
 import MyFooter from "@/components/Footer/MyFooter";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import Refreshtoken2 from "@/components/Refreshtoken/Refreshtoken2";
 
 
 
@@ -28,6 +29,7 @@ export default function RootLayout({
               <Navbar />
               {children}
             </div>
+            <Refreshtoken2/>
             <MyFooter />
           </div>
         </body>
