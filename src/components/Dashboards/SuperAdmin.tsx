@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { IEvent } from '@/interfaces';
 import { User } from '@/interfaces/user';
@@ -65,9 +66,16 @@ function SuperAdmin() {
     }, [router])
 
     const toggleAdminStatus = async (id: string, isAdmin: boolean) => {
+        const confirmation = confirm(`¿Estás seguro de que quieres ${isAdmin ? 'activar' : 'desactivar'} el rol de administrador para este usuario?`);
+
+        if (!confirmation) {
+            return; 
+        }
+
         const res = await putUser(id, isAdmin);
         if (res.status !== 200) {
             alert("Error al cambiar el estado de administrador del usuario");
+            return;
         }
         if (res.data !== null && res.data.isAdmin !== undefined) {
             const updatedUsers = users.map(user => {
@@ -77,6 +85,7 @@ function SuperAdmin() {
                 return user;
             });
             setUsers(updatedUsers);
+            alert(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`);
         }
     }
 
@@ -134,7 +143,7 @@ function SuperAdmin() {
                                         {events && events.map(event => (
                                             <li key={event.id} className='p-2'>
                                                 <div className='p-3 border-b-2 md:flex-row justify-between items-center flex flex-col font-bold gap-3'>
-                                                    <img src={event.imgUrl} alt={event.name} className='md:w-[40%] w-[70%] ' />
+                                                    <img src={event.imgUrl} alt={event.name} className='md:w-[30%] w-[70%] ' />
                                                     <div className='flex flex-col justify-center p-5 items-center lg:mr-10'>
                                                         <p>{event.name.toLocaleUpperCase()}</p>
                                                         <p>{formatDate(event.date)}</p>
