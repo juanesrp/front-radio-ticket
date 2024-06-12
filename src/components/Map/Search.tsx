@@ -1,6 +1,6 @@
 import { Wrapper, Status } from "@googlemaps/react-wrapper"
-import { SetCoordinates } from "./page"
 import { SearchComponent } from "./SearchComponent"
+import { SetCoordinates } from "."
 
 const render = (status: Status, setCoordinates: SetCoordinates) => {
   switch (status) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Coordinates } from "./page"
+import { Coordinates } from "."
 
 type MarkerProps = {
   coordinates: Coordinates

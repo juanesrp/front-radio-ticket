@@ -4,6 +4,7 @@ import "./globals.css";
 import MyFooter from "@/components/Footer/MyFooter";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { Toaster } from 'sonner';
 
 
 
@@ -32,6 +33,15 @@ export default function RootLayout({
           </div>
         </body>
       </UserProvider>
+      <Toaster position="top-center" toastOptions={{
+              style: { 
+                fontSize: '1.5rem', // Aumenta el tamaño de fuente del texto
+                padding: '2rem 2rem', // Aumenta el espaciado interno
+                maxWidth: '700px', 
+                textAlign: 'center',
+              }
+            }}
+            />
     </html>
   );
 }

@@ -5,7 +5,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Link from "next/link";
 import { validateLoginForms } from '@/helpers/validateForms';
-import { FaEyeSlash, FaEye } from 'react-icons/fa';
+import { FaEyeSlash, FaEye, } from 'react-icons/fa';
+import { BiCheck } from 'react-icons/bi';
+import {  toast } from "sonner"
+
 
 
 const Login: React.FC = () => {
@@ -60,20 +63,23 @@ const Login: React.FC = () => {
         }));
 
         if (decodedToken.isAdmin) {
-          alert("Te has logeado correctamente")
+          toast("Te has logueado correctamente", {
+            icon: <BiCheck style={{color: "green", fontSize: "50px"}}/> 
+          }); 
           router.push('/');
         } else {
-          alert("Te has logeado correctamente")
+          toast("Te has logueado correctamente",{
+            icon: <BiCheck style={{color: "green"}}/> 
+          }); 
           router.push('/');
         }
       } else {
-        alert(res.data.message);
+        toast.error(res.data.message); // Utilizar toast en lugar de alert
       }
     } catch (error: any) {
       console.error("Error:", error.response.data);
-      alert("Error: " + error.response.data.message)
+      toast.error("Error: " + error.response.data.message); // Utilizar toast en lugar de alert
       throw new Error(error);
-
     }
   };
   return (
@@ -125,12 +131,14 @@ const Login: React.FC = () => {
           <div className="flex justify-center">
             <button
               type="submit"
+  
               className="w-96 py-3 mt-6 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition duration-300 text-xl"
             >
               INICIAR SESIÓN
             </button>
           </div>
         </form>
+        
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>

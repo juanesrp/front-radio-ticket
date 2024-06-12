@@ -61,3 +61,4 @@ export function validateRegisterForms(values: RegisterProps): RegisterErrorProps
 
   return errors
 }
+

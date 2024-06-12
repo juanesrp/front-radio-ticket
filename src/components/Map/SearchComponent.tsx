@@ -1,10 +1,10 @@
 'use client'
-
 import { useEffect, useRef } from "react"
-import { SetCoordinates } from "./page"
+import { SetCoordinates } from "."
+
 
 type SearchComponentProps = {
-  setCoordinates: SetCoordinates
+  setCoordinates?: SetCoordinates
 }
 
 export function SearchComponent({ setCoordinates }: SearchComponentProps) {
@@ -15,7 +15,7 @@ export function SearchComponent({ setCoordinates }: SearchComponentProps) {
       const autocomplete = new window.google.maps.places.Autocomplete(
         ref.current,
         {
-          types: ["geocode"],
+          types: ["establishment", "geocode"],
         },
       )
       // Here we set the only field we want back from Google, reducing cost
@@ -31,10 +31,12 @@ export function SearchComponent({ setCoordinates }: SearchComponentProps) {
 
         if (lat && lng) {
           // Return if they exist
-          return setCoordinates({
-            lat,
-            lng,
-          })
+          if (setCoordinates) {
+            return setCoordinates({
+              lat,
+              lng,
+            })
+          }
         }
       })
     }

@@ -1,13 +1,18 @@
+'use client'
+
 import { IEvent } from "@/interfaces";
 import { formatDate } from "@/utils/formatDate";
 import { Alert } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Coordinates, Map } from "@/components/Map";
 
 const EventDetail = ({ event }: { event: IEvent }) => {
   const [selectedZone, setSelectedZone] = useState(event.tickets[0].zone);
   const [selectedPrice, setSelectedPrice] = useState(event.tickets[0].price);
   const [quantity, setQuantity] = useState(1);
   const [userSession, setUserSession] = useState();
+  const API_KEY = 'NEXT_PUBLIC_MAPS_API_KEY';
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -66,6 +71,8 @@ const EventDetail = ({ event }: { event: IEvent }) => {
     setQuantity(quantity + 1);
   };
 
+  const cordinates: Coordinates = { lat: Number(event.latitude), lng: Number(event.longitude) };
+
   return (
     <section className="pt-10 mb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 max-w-6xl mx-5 md:mx-auto">
@@ -73,12 +80,15 @@ const EventDetail = ({ event }: { event: IEvent }) => {
           <img src={event.imgUrl} className="w-full max-w-96" />
         </div>
         <div className="grid-cols-1">
+
           <div className="flex flex-col mt-5 text-center md:text-left ">
             <h1 className="text-3xl font-bold">
               {formatDate(event.date)} | {event.name}
             </h1>
             <h2 className="text-lg font-normal">${selectedPrice}</h2>
           </div>
+
+
           <form className="mt-4 flex flex-wrap w-full px-3 gap-1">
             <div className="flex flex-col w-2/3 lg:w-5/12">
               <label htmlFor="Location" className="mb-2 text-xs font-semibold ">
@@ -122,7 +132,7 @@ const EventDetail = ({ event }: { event: IEvent }) => {
                 </button>
               </div>
             </div>
-            <div className="flex w-full mt-4 lg:w-1/3 lg:items-end">
+            <div className="flex w-full mt-4  ml-3 lg:w-1/3 lg:items-end">
               <button
                 onClick={handleBuy}
                 className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700"
@@ -130,10 +140,21 @@ const EventDetail = ({ event }: { event: IEvent }) => {
                 AGREGAR AL CARRITO
               </button>
             </div>
+
+            <Map coordinates={cordinates} />
+
+            <div className="flex flex-col mt-5">
+              <h1 className="text-xl font-bold mb-4">
+                {event.address}
+              </h1>
+
+              <div>
+                <p>{event.description}</p>
+              </div>
+            </div>
+
           </form>
-          <div className="mt-10">
-            <p>{event.description}</p>
-          </div>
+
         </div>
       </div>
     </section>
