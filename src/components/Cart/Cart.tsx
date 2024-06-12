@@ -128,10 +128,11 @@ const Cart = () => {
       const data = await createOrder(order);
       if (paymentMethod === "mercadopago") {
         window.open(data.init_point, "_blank");
+        localStorage.removeItem("cart");
       } else {
         window.open(data.href, "_blank");
+        localStorage.removeItem("cart");
       }
-      console.log("Este es el data", data);
     } catch (error) {
       console.log(error);
     }
