@@ -2,7 +2,6 @@
 
 import { IEvent } from "@/interfaces";
 import { formatDate } from "@/utils/formatDate";
-import { Alert } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Coordinates, Map } from "@/components/Map";
@@ -22,6 +21,7 @@ const EventDetail = ({ event }: { event: IEvent }) => {
   }, []);
 
   const handleBuy = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (userSession) {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const ticket = event.tickets.find(

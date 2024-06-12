@@ -27,7 +27,7 @@ const EventsHome = () => {
   }, []);
 
   return (
-    <section className="grid py-20 px-5 md:px-0 bg-white">
+    <section className="grid py-16 px-5 md:px-2 bg-white">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4 max-w-6xl mx-auto">
         <div className="col-span-1 items-center">
           {events.length > 0 && (

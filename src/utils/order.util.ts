@@ -32,3 +32,38 @@ export const createOrder = async (order: any) => {
     console.log(error);
   }
 };
+
+export const generateSubscription = async () => {
+  try {
+    const userSesion = localStorage.getItem("userSession");
+    let token: string | null = null;
+
+    if (userSesion) {
+      const userSesionToken = JSON.parse(userSesion);
+      token = userSesionToken ? userSesionToken.token : null;
+    } else {
+      return { error: "No se encontró userSesion en el localStorage" };
+    }
+
+    if (!token) {
+      return { error: "Token no encontrado en userSesion" };
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api}/orders/generatesubscription/PLAN MENSUAL`,
+      {},
+      config
+    );
+
+    console.log("Estoy en el generateSubscription", res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
