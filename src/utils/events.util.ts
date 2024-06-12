@@ -168,7 +168,8 @@ export const postEvent = async (eventData: {
   imgUrl: string;
   category: string;
   date: string;
-  location: string;
+  latitude: string;
+  longitude: string;
   tickets: {
     price: number;
     stock: number;

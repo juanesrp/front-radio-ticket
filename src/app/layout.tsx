@@ -4,9 +4,8 @@ import "./globals.css";
 import MyFooter from "@/components/Footer/MyFooter";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { Toaster } from 'sonner';
 import Refreshtoken2 from "@/components/Refreshtoken/Refreshtoken2";
-
-
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +33,15 @@ export default function RootLayout({
           </div>
         </body>
       </UserProvider>
+      <Toaster position="top-center" toastOptions={{
+              style: { 
+                fontSize: '1.5rem', 
+                padding: '2rem 2rem',
+                maxWidth: '700px', 
+                textAlign: 'center',
+              }
+            }}
+            />
     </html>
   );
 }

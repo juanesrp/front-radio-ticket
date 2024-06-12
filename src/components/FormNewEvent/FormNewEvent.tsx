@@ -5,6 +5,8 @@ import { getCategories } from '@/utils/categories.util';
 import { postEvent, postImage } from '@/utils/events.util';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Search } from '../Map/Search';
+import { Coordinates, Map } from '../Map';
 
 const FormNewEvent = () => {
     const [image, setImage] = useState<File | null>(null)
@@ -18,9 +20,14 @@ const FormNewEvent = () => {
         imgUrl: "",
         category: "",
         date: "",
-        location: '',
+        address: "",
+        longitude: "",
+        latitude: "",
         tickets: [{ price: "", stock: "", zone: "" }],
     });
+    const [coordinates, setCoordinates] =
+        useState<Coordinates>()
+
 
     useEffect(() => {
         const userSessionString = localStorage.getItem('userSession');
@@ -29,6 +36,14 @@ const FormNewEvent = () => {
             setAuthUser(userSession)
         }
     }, [])
+
+    useEffect(() => {
+        setInput({
+            ...input,
+            latitude: coordinates?.lat?.toString() ?? "",
+            longitude: coordinates?.lng?.toString() ?? "",
+        });
+    }, [coordinates])
 
     useEffect(() => {
         const today = new Date().toISOString().split("T")[0];
@@ -90,10 +105,10 @@ const FormNewEvent = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!input.name || !input.description || !input.category || !input.date || !input.location ||
+        if (!input.name || !input.description || !input.category || !input.date || !input.latitude || !input.address ||!input.longitude ||
             !input.tickets[0].price || !input.tickets[0].stock || !input.tickets[0].zone || !image) {
             alert("Por favor completa todos los campos");
-            return;
+            return
         }
 
         let imageUrl = input.imgUrl;
@@ -134,8 +149,8 @@ const FormNewEvent = () => {
             }))
         };
         const result = await postEvent(eventData);
-        console.log(eventData);
-        console.log(result);
+        console.log({eventData});
+        console.log({result});
         if (result.error) {
             if (result.error === "Invalid token") {
                 console.log("token invalido")
@@ -187,9 +202,16 @@ const FormNewEvent = () => {
                         </div>
 
                         <div className='flex flex-col'>
-                            <label htmlFor="location" className='text-gray-700 font-semibold my-2'>Ubicación del evento*</label>
-                            <input type="text" id='location' name='location' className='rounded-md' value={input.location} onChange={handleChange} />
+                            <label htmlFor="address"  className='text-gray-700 font-semibold my-2'>Dirección*</label>
+                            <input type="text" id='address' name='address' className='rounded-md'  value={input.address} onChange={handleChange} />
                         </div>
+
+                        <div className='flex flex-col map-search-wrapper'>
+                            <label htmlFor="location" className='text-gray-700 font-semibold my-2'>Ubicación del evento(Mapa)*</label>
+                            <Search setCoordinates={setCoordinates} />
+                        </div>
+
+                        <Map coordinates={coordinates} setCoordinates={setCoordinates} />
 
                         <div className='flex justify-center'>
                             <input
