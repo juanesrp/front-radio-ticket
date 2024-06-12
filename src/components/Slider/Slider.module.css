@@ -14,8 +14,8 @@
 .container h1 {
     display: flex;
     justify-content: center;
-    color: white;
-    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    font-weight: bolder;
+    font-size: x-large;
 }
 
 .inner {
@@ -26,16 +26,16 @@
 
 .tag {
     display: flex;
-    background-color: #e1e1e2;
+    background-color: #f3f4f6;
     padding: 0.5rem 0.8rem;
     margin: 1rem;
-    box-shadow: 0 0.1rem 0.2rem #00000033, 0 0.1rem 0.5rem #0000004d, 0 0.2rem 1.5rem #00000066;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .tag img {
-    width: 12rem;
+    width: 9rem;
     aspect-ratio: 3/3;
-    max-width: none !important;
+    max-width: none;
 }
 
 .fade {
@@ -51,5 +51,11 @@
 
     100% {
         transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .tag img {
+        width: 6rem;
     }
 }

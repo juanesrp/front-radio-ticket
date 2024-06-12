@@ -107,7 +107,7 @@ const CreateDiscountSuperAdmin = ({ event }: { event: IEvent }) => {
                     ) : null
                   ))}
                 </div>
-              ): (<span className='text-center'>No hay descuentos todavia</span>)}
+              ): (<span className='text-center border-2'>No hay descuentos todavia</span>)}
             </div>
           </div>
         </div>

@@ -66,9 +66,16 @@ function SuperAdmin() {
     }, [router])
 
     const toggleAdminStatus = async (id: string, isAdmin: boolean) => {
+        const confirmation = confirm(`¿Estás seguro de que quieres ${isAdmin ? 'activar' : 'desactivar'} el rol de administrador para este usuario?`);
+
+        if (!confirmation) {
+            return; 
+        }
+
         const res = await putUser(id, isAdmin);
         if (res.status !== 200) {
             alert("Error al cambiar el estado de administrador del usuario");
+            return;
         }
         if (res.data !== null && res.data.isAdmin !== undefined) {
             const updatedUsers = users.map(user => {
@@ -78,6 +85,7 @@ function SuperAdmin() {
                 return user;
             });
             setUsers(updatedUsers);
+            alert(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`);
         }
     }
 
