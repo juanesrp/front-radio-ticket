@@ -4,6 +4,7 @@ import { RegisterErrorProps, RegisterProps } from "@/interfaces/register";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+const api = process.env.NEXT_PUBLIC_API;
 
 
 const Register: React.FC = () => {
@@ -38,7 +39,7 @@ const Register: React.FC = () => {
             return false;
         }
         try {
-            const res = await axios.post('http://localhost:3001/auth/signup', dataUser, {
+            const res = await axios.post(`${api}/auth/signup`, dataUser, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

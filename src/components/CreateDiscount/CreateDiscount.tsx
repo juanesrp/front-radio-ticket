@@ -1,17 +1,32 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-import { DiscuontResponse, IEvent } from "@/interfaces";
-import { postDiscount } from "@/utils/discount.util";
+import { Discount, IEvent } from '@/interfaces'
+import { getDiscountId, postDiscount } from '@/utils/discount.util'
 import { formatDate } from "@/utils/formatDate";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const CreateDiscount = ({ event }: { event: IEvent }) => {
   const [discount, setDiscount] = useState("");
-  const [code, setCode] = useState<DiscuontResponse["data"] | null>(null);
+  const [allDiscount, setAllDiscount] = useState<Discount[]>([])
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiscount(e.target.value);
   };
+
+  useEffect(() => {
+    const getAllDiscount = async (id: string) => {
+      try {
+        const res = await getDiscountId(id)
+        setAllDiscount(res || [])
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    }
+    if (event.id) {
+      getAllDiscount(event.id);
+    }
+  }, [event.id])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,9 +36,9 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
     } else {
       try {
         const res = await postDiscount(event.id, discountValue);
-
-        setCode(res);
-        console.log("🚀 ~ handleSubmit ~ res:", res);
+        const newDiscount = res.data;
+        const updatedDiscounts = await getDiscountId(event.id);
+        setAllDiscount(updatedDiscounts || []);
         alert(`Se creó un descuento con el ${discountValue}%`);
         setDiscount("");
       } catch (error) {
@@ -46,7 +61,7 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
               className="w-full max-w-96"
             />
           </div>
-          <div className="flex flex-col mt-5">
+          <div className="flex flex-col mt-5  lg:w-[28rem]">
             <span className="text-3xl font-bold">
               {`${formatDate(event.date)} | ${event.name}`}
             </span>
@@ -83,9 +98,29 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
                 </button>
               </div>
             </form>
-            <div className="flex flex-col mt-2">
-              <span>Código del evento creado: {code?.code}</span>
-              <span>Descuento del evento creado: {code?.discount}%</span>
+            <div className='flex flex-col mt-5 border-2'>
+              <h3 className='text-center border-2 font-bold'>DESCUENTOS CREADOS</h3>
+              {allDiscount.length > 0 ? (
+                <div>
+                  {allDiscount.map((discount) => (
+                    discount ? (
+                      <div key={discount.id}>
+                        <div className='flex justify-evenly border-2'>
+                          <div className='flex flex-col items-center w-screen border-r-2'>
+                           <span className='font-bold'>Descuento</span> 
+                          <span>{discount.discount}%</span> 
+                          </div>
+                          <div className='flex flex-col items-center  w-screen border-l-2'>
+                           <span className='font-bold'>Código</span>
+                          <span>{discount.code}</span> 
+                          </div>
+                        </div>
+                        
+                      </div>
+                    ) : null
+                  ))}
+                </div>
+              ): (<span className='text-center border-2'>No hay descuentos todavia</span>)}
             </div>
           </div>
         </div>

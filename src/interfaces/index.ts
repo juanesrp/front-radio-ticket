@@ -4,7 +4,9 @@ export interface IEvent {
   description: string;
   imgUrl: string;
   date: string;
-  location: string;
+  address: string;
+  latitude: string;
+  longitude: string;
   userEmail: string | null;
   ticketId: string;
   category: {
@@ -42,9 +44,12 @@ export interface CreateDiscountProps {
   events: IEvent[];
 }
 
+export interface Discount {
+  id: string;
+  code: string;
+  discount: number;
+}
+
 export interface DiscuontResponse {
-  data: {
-    code: string
-    discount: number
-  }
+  data: Discount;
 }
