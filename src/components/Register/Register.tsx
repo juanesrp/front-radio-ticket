@@ -4,6 +4,8 @@ import { RegisterErrorProps, RegisterProps } from "@/interfaces/register";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import { BiCheck, BiError } from "react-icons/bi";
 const api = process.env.NEXT_PUBLIC_API;
 
 
@@ -45,22 +47,30 @@ const Register: React.FC = () => {
                 }
             })
             if (res.status === 201) {
-                alert("El usuario se ha registrado exitosamente");
+                toast("El usuario se ha registrado exitosamente", {
+                    icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
+                });
                 setDataUser(initialdata);
                 router.push("/login");
             } else {
                 const parsedResponse = await res.data;
-                alert(parsedResponse.message);
+                toast(parsedResponse.message, {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             }
         } catch (error: any) {
             console.error("Error:", error);
             if (error.response) {
-              alert("Error: " + error.response.data.message);
+                toast("Error: " + error.response.data.message, {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             } else {
-              alert("Ha ocurrido un error durante el registro");
+                toast("Ha ocurrido un error durante el registro", {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             }
             throw new Error("Registration failed");
-          }
+        }
     };
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value);

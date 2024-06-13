@@ -1,6 +1,8 @@
 "use client";
 import { generateSubscription } from "@/utils/order.util";
 import React, { useEffect, useState } from "react";
+import { BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const Subscription = () => {
   const [userSession, setUserSession] = useState();
@@ -10,7 +12,9 @@ const Subscription = () => {
       const userToken = localStorage.getItem("userSession");
       setUserSession(JSON.parse(userToken!));
       if (!userToken) {
-        alert("Debes iniciar sesion");
+        toast("Debes iniciar sesion para realizar esta acción", {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        });
         window.location.href = "/login";
       }
     }

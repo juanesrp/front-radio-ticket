@@ -6,7 +6,7 @@ import axios from "axios";
 import Link from "next/link";
 import { validateLoginForms } from "@/helpers/validateForms";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { BiCheck } from "react-icons/bi";
+import { BiCheck, BiError } from "react-icons/bi";
 import { toast } from "sonner";
 const api = process.env.NEXT_PUBLIC_API;
 
@@ -20,7 +20,7 @@ const Login: React.FC = () => {
 
   const handleRedirect = () => {
     window.location.href = "/api/auth/login?connection=googlex";
-  };
+  }
   const [dataUser, setDataUser] = useState<LoginProps>(loginData);
   const [errorUser, setErrorUser] = useState<LoginErrorProps>(loginData);
   const [showPassword, setShowPassword] = useState(false);
@@ -75,11 +75,15 @@ const Login: React.FC = () => {
           router.push("/");
         }
       } else {
-        toast.error(res.data.message);
+        toast(res.data.message, {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        });
       }
     } catch (error: any) {
       console.error("Error:", error.response.data);
-      toast.error("Error: " + error.response.data.message);
+      toast("Error: " + error.response.data.message, {
+        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+      });
       throw new Error(error);
     }
   };

@@ -7,6 +7,8 @@ import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';
+import { BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const Admin = () => {
     const [authUser, setAuthUser] = useState<UserData | null>(null);
@@ -25,11 +27,13 @@ const Admin = () => {
                     const eventsData = await getEventsOfAdmin();
                     if ('error' in eventsData) {
                         if (eventsData.error === "Invalid token") {
-                            alert("El token es inválido. Vuelve a iniciar sesión.");
+                            toast("El token es inválido. Vuelve a iniciar sesión.", {
+                                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                            });
                             localStorage.removeItem("userSession");
                             localStorage.removeItem("cart");
                             window.location.href = "/login";
-                        } 
+                        }
                     } else {
                         setEvents(eventsData);
                     }
@@ -42,7 +46,7 @@ const Admin = () => {
         fetchUserData();
     }, [router]);
     console.log();
-    
+
     return (
         <>
 
@@ -61,13 +65,13 @@ const Admin = () => {
                                 {events && events.map(event => (
                                     <li key={event.id} className='p-2'>
                                         <div className='p-3 border-b-2 md:flex-row justify-between items-center flex flex-col font-bold gap-3'>
-                                        <img src={event.imgUrl} alt={event.name} className='md:w-[30%] w-[70%] '/>
+                                            <img src={event.imgUrl} alt={event.name} className='md:w-[30%] w-[70%] ' />
                                             <div className='flex flex-col justify-center p-5 items-center lg:mr-10'>
                                                 <p>{event.name.toLocaleUpperCase()}</p>
                                                 <p>{formatDate(event.date)}</p>
                                                 <Link href={`/dashAdmi/${event.id}`}><button className='bg-red-600 hover:bg-red-700 transition duration-300  p-2 w-32 text-base text-white'>Ver detalle</button></Link>
-                                            </div>                                         
-                                        </div> 
+                                            </div>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>

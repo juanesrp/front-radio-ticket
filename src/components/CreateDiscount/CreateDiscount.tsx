@@ -5,6 +5,8 @@ import { getDiscountId, postDiscount } from '@/utils/discount.util'
 import { formatDate } from "@/utils/formatDate";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { BiMoneyWithdraw, BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const CreateDiscount = ({ event }: { event: IEvent }) => {
   const [discount, setDiscount] = useState("");
@@ -32,20 +34,28 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
     e.preventDefault();
     const discountValue = parseInt(discount, 10);
     if (isNaN(discountValue) || discountValue < 10 || discountValue > 100) {
-      alert("El valor del descuento debe estar entre 10 y 100");
+      toast('El valor del descuento debe estar entre 10 y 100', {
+        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        duration: 2000
+      });
     } else {
       try {
         const res = await postDiscount(event.id, discountValue);
         const newDiscount = res.data;
         const updatedDiscounts = await getDiscountId(event.id);
         setAllDiscount(updatedDiscounts || []);
-        alert(`Se creó un descuento con el ${discountValue}%`);
-        setDiscount("");
+        toast(`Se creó un descuento con el ${discountValue}%`, {
+          icon: <BiMoneyWithdraw style={{ color: "green", fontSize: "50px" }} />,
+          duration: 2000
+        });
+        setDiscount('');
       } catch (error) {
         console.error("Error al crear el descuento:", error);
-        alert(
-          "Hubo un error al crear el descuento. Por favor, inténtalo de nuevo más tarde."
-        );
+        toast(
+          "Error al crear el descuento. Por favor, inténtalo de nuevo más tarde.", {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          duration: 2000
+        });
       }
     }
   };
@@ -107,20 +117,20 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
                       <div key={discount.id}>
                         <div className='flex justify-evenly border-2'>
                           <div className='flex flex-col items-center w-screen border-r-2'>
-                           <span className='font-bold'>Descuento</span> 
-                          <span>{discount.discount}%</span> 
+                            <span className='font-bold'>Descuento</span>
+                            <span>{discount.discount}%</span>
                           </div>
                           <div className='flex flex-col items-center  w-screen border-l-2'>
-                           <span className='font-bold'>Código</span>
-                          <span>{discount.code}</span> 
+                            <span className='font-bold'>Código</span>
+                            <span>{discount.code}</span>
                           </div>
                         </div>
-                        
+
                       </div>
                     ) : null
                   ))}
                 </div>
-              ): (<span className='text-center border-2'>No hay descuentos todavia</span>)}
+              ) : (<span className='text-center border-2'>No hay descuentos todavia</span>)}
             </div>
           </div>
         </div>

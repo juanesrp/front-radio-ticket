@@ -2,8 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-.map-search-wrapper input{
+.map-search-wrapper input {
     padding: 0.5rem 0.75rem;
     border: 1px solid #6B7280;
     border-radius: 0.375rem;
+}
+
+.log-out {
+    width: 80px;
+    height: 40px;
+    margin-right: 0.5rem;
+    padding: 0.5rem 0.5rem;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.log-out.yes {
+    background-color: red;
+}
+
+.log-out.no {
+    background-color: grey;
+}
+
+.toaster {
+    font-size: 1.5rem;
+    padding: 2rem 2rem;
+    max-width: 1100px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }

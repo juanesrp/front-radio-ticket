@@ -10,6 +10,8 @@ import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
 import axios from "axios";
 import { ICartItem } from "@/interfaces";
 import { refresh } from "@/utils/refresh";
+import { BiCheck, BiError, BiLogOutCircle } from "react-icons/bi";
+import { toast } from "sonner";
 const api = process.env.NEXT_PUBLIC_API;
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
@@ -47,10 +49,14 @@ export const Navbar = () => {
 
           if (userSession) {
             setAuthUser(userSession);
-            alert("Te has logeado correctamente");
+            toast("Te has logeado correctamente", {
+              icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
+            });
           }
         } else {
-          alert(res.data.message);
+          toast(res.data.message, {
+            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          });
         }
       } catch (error: any) {
         console.error("Error sending user:", error);
@@ -59,9 +65,13 @@ export const Navbar = () => {
           error.response.data &&
           error.response.data.message
         ) {
-          alert("Error: " + error.response.data.message);
+          toast("Error: " + error.response.data.message, {
+            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          });
         } else {
-          alert("An unexpected error occurred.");
+          toast("An unexpected error occurred.", {
+            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          });
         }
       }
     };
@@ -138,8 +148,8 @@ export const Navbar = () => {
     ? authUser.isSuperAdmin
       ? "/dashSuperAdmin"
       : authUser.isAdmin
-      ? "/dashAdmi"
-      : "/dashMyUser"
+        ? "/dashAdmi"
+        : "/dashMyUser"
     : "/login";
 
   useEffect(() => {
@@ -150,7 +160,9 @@ export const Navbar = () => {
       } catch (error: any) {
         if (error.message === "Token expired") {
           console.error("Token expired, logging out user...");
-          window.alert("Sesión cerrada");
+          toast("Sesión cerrada", {
+            icon: <BiLogOutCircle style={{ color: "red", fontSize: "50px" }} />,
+          });
           localStorage.removeItem("userSession");
           localStorage.removeItem("cart");
           window.location.href = "/api/auth/logout";
@@ -163,17 +175,40 @@ export const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    const isConfirmed = window.confirm("¿Estás seguro? Vas a cerrar sesión!!");
-    if (isConfirmed) {
-      window.alert("Sesión cerrada");
-      localStorage.removeItem("userSession");
-      localStorage.removeItem("cart");
-      window.location.href = "/api/auth/logout";
-    } else {
-      window.alert("Cancelado");
-    }
-  };
+    toast(
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div>¿Estás seguro? Vas a cerrar sesión</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
+          {[
+            {
+              label: "Sí",
+              onClick: () => {
+                toast("Sesión cerrada");
+                localStorage.removeItem("userSession");
+                localStorage.removeItem("cart");
+                window.location.href = "/api/auth/logout";
+              },
+            },
+            {
+              label: "No",
+              onClick: () => {
+                toast.dismiss();
+              },
+            },
+          ].map((action) => (
+            <button
+              key={action.label}
+              onClick={action.onClick}
+              className={`log-out ${action.label === 'Sí' ? 'yes' : 'no'}`}
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      </div>,
 
+    );
+  };
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCart(storedCart);
@@ -183,11 +218,10 @@ export const Navbar = () => {
     <>
       <div className="bg-black">
         <div
-          className={`${
-            isFixed
-              ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
-              : "relative"
-          }`}
+          className={`${isFixed
+            ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
+            : "relative"
+            }`}
         >
           <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
             <div
@@ -224,54 +258,49 @@ export const Navbar = () => {
           </div>
         </div>
         <div
-          className={`${
-            isFixed
-              ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
-              : "relative"
-          }`}
+          className={`${isFixed
+            ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
+            : "relative"
+            }`}
         >
           <div className="text-[#ffffff9b] pr-5 pl-2 flex justify-between max-w-7xl mx-auto max-[768px]:hidden">
             <div className="py-5 text-sm">
               <Link href={"/"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   INICIO
                 </span>
               </Link>
               <Link href={"/concerts"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/concerts"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/concerts"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   PROXIMOS EVENTOS
                 </span>
               </Link>
               <Link href={"/about"}>
                 <span
-                  className={`p-4  hover:text-white transition duration-300 ${
-                    pathname === "/about"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4  hover:text-white transition duration-300 ${pathname === "/about"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   ACERCA DE LA PAGINA
                 </span>
               </Link>
               <Link href={"/contact"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${
-                    pathname === "/contact"
-                      ? "text-white border-b-[6px] border-red-600"
-                      : ""
-                  }`}
+                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/contact"
+                    ? "text-white border-b-[6px] border-red-600"
+                    : ""
+                    }`}
                 >
                   CONTACTO
                 </span>
@@ -301,9 +330,9 @@ export const Navbar = () => {
                 ""
               )}
               <Link href={homePath}>
-                <span className=" hover:text-white transition duration-300">
+                <span className=" hover:text-white  text-2xs transition duration-300">
                   {authUser ? (
-                    authUser.name.toLocaleUpperCase()
+                    authUser.name
                   ) : (
                     <img src="/avatar.svg" alt="avatar" className="h-7" />
                   )}
@@ -315,17 +344,15 @@ export const Navbar = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${
-          isOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${isOpen
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+          }`}
       >
         <div
           ref={sidebarRef}
-          className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <input
             type="search"
@@ -353,8 +380,8 @@ export const Navbar = () => {
               </span>
             </Link>
             <Link href={homePath}>
-              <span className="p-4 hover:text-white transition duration-300">
-                {authUser ? authUser.name.toLocaleUpperCase() : "CUENTA"}
+              <span className="p-4 hover:text-white  text-sm transition duration-300">
+                {authUser ? authUser.name : "CUENTA"}
               </span>
             </Link>
             {authUser ? (
