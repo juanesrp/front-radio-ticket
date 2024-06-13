@@ -3,6 +3,8 @@ import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { Icontact } from "@/interfaces/contact";
 import { useState } from "react";
+import { BiError, BiMessageCheck } from "react-icons/bi";
+import { toast } from "sonner";
 
 const ContactUS: React.FC = () => {
     const formRef = useRef(null);
@@ -36,14 +38,20 @@ const ContactUS: React.FC = () => {
                 )
                 .then((result) => {
                     console.log(result.text);
-                    alert('Correo electrónico enviado');
+                    toast('Correo electrónico enviado.', {
+                        icon: <BiMessageCheck style={{ color: "green", fontSize: "50px" }} />,
+                    });
                     resetForm();
                 }, (error) => {
                     console.log(error.text);
-                    alert('Error al enviar correo electrónico');
+                    toast('Error al enviar correo electrónico.', {
+                        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                    });
                 });
         } else {
-            alert('Por favor, complete todos los campos');
+            toast('Por favor, complete todos los campos.', {
+                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+            });
         }
     };
 

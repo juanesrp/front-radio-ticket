@@ -5,6 +5,8 @@ import { getDiscount } from "@/utils/discount.util";
 import { createOrder } from "@/utils/order.util";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { BiCheck, BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const Cart = () => {
   const [userSession, setUserSession] = useState<UserData>();
@@ -20,7 +22,9 @@ const Cart = () => {
       const userToken = localStorage.getItem("userSession");
       setUserSession(JSON.parse(userToken!));
       if (!userToken) {
-        alert("Debes iniciar sesion");
+        toast("Debes iniciar sesion para realizar esta acción", {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        });
         window.location.href = "/login";
       }
 
@@ -113,7 +117,9 @@ const Cart = () => {
   const sendOrder = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!paymentMethod) {
-      alert("Debes seleccionar un metodo de pago");
+      toast("Debes seleccionar un metodo de pago", {
+        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+      });
       return;
     }
     try {
@@ -286,8 +292,8 @@ const Cart = () => {
                       return (
                         acc +
                         event.ticket.price *
-                          event.ticket.quantity *
-                          (discount / 100)
+                        event.ticket.quantity *
+                        (discount / 100)
                       );
                     }, 0)}
                   </p>

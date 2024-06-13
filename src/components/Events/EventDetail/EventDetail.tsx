@@ -5,8 +5,13 @@ import { formatDate } from "@/utils/formatDate";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Coordinates, Map } from "@/components/Map";
+import { BiCheck, BiError, BiCartAdd } from "react-icons/bi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 
 const EventDetail = ({ event }: { event: IEvent }) => {
+  const router = useRouter();
   const [selectedZone, setSelectedZone] = useState(event.tickets[0].zone);
   const [selectedPrice, setSelectedPrice] = useState(event.tickets[0].price);
   const [quantity, setQuantity] = useState(1);
@@ -42,10 +47,26 @@ const EventDetail = ({ event }: { event: IEvent }) => {
 
       cart.push(newCart);
       localStorage.setItem("cart", JSON.stringify(cart));
-      alert("Se agrego al carrito");
+      toast(
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <BiCartAdd style={{ color: "green", fontSize: "60px", marginRight: "10px" }} />
+          <span style={{ marginLeft: "10px" }}>¡Añadido al carrito con éxito!</span>
+        </div>,
+        {
+          duration: 1000,
+        }
+      );
+      setTimeout(() => {
+        router.push("/cart")
+      }, 1000);
     } else {
-      alert("Debes iniciar sesion");
-      window.location.href = "/login";
+      toast(
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <BiError style={{ color: "red", fontSize: "50px", marginRight: "10px" }} />
+          <span style={{ marginLeft: "10px" }}>Debes iniciar sesión para comprar</span>
+        </div>,
+      );
+      router.push("/login");
     }
   };
   // Manejar el cambio de zona

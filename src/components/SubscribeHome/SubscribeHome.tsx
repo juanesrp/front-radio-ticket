@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const SubscribeHome = () => {
   const [userSession, setUserSession] = useState();
@@ -15,8 +17,13 @@ const SubscribeHome = () => {
     if (userSession) {
       window.location.href = "/subscription";
     } else {
-      alert("Debes iniciar sesion");
-      window.location.href = "/login";
+      toast("Debes iniciar sesión para realizar esta acción", {
+        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        duration: 2000,
+      });
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
     }
   };
 

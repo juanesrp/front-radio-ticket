@@ -8,6 +8,8 @@ import { formatDate } from '@/utils/formatDate';
 import { getUsers, putUser } from '@/utils/users.util';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { BiCheck, BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 import React, { useEffect, useState } from 'react'
 
@@ -37,7 +39,9 @@ function SuperAdmin() {
                         setUsers(res);
                     } else if ('error' in res) {
                         if (res.error === "Invalid token") {
-                            alert("El token es inválido. Vuelve a iniciar sesión.");
+                            toast("El token es inválido. Vuelve a iniciar sesión.", {
+                                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                            });
                             localStorage.removeItem("userSession");
                             localStorage.removeItem("cart");
                             window.location.href = "/login";
@@ -67,9 +71,8 @@ function SuperAdmin() {
 
     const toggleAdminStatus = async (id: string, isAdmin: boolean) => {
         const confirmation = confirm(`¿Estás seguro de que quieres ${isAdmin ? 'activar' : 'desactivar'} el rol de administrador para este usuario?`);
-
         if (!confirmation) {
-            return; 
+            return;
         }
 
         const res = await putUser(id, isAdmin);
@@ -87,7 +90,8 @@ function SuperAdmin() {
             setUsers(updatedUsers);
             alert(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`);
         }
-    }
+    };
+
 
     useEffect(() => {
         fetchEvents(currentPage);
