@@ -133,11 +133,9 @@ const Cart = () => {
       };
       const data = await createOrder(order);
       if (paymentMethod === "mercadopago") {
-        window.open(data.init_point, "_blank");
-        localStorage.removeItem("cart");
+        window.location.href = data.init_point;
       } else {
-        window.open(data.href, "_blank");
-        localStorage.removeItem("cart");
+        window.location.href = data.href;
       }
     } catch (error) {
       console.log(error);
@@ -151,9 +149,9 @@ const Cart = () => {
   };
 
   return (
-    <div className="grid grid-cols-1">
+    <div>
       {cart.length ? (
-        <div className="max-w-6xl w-full mx-auto p-5">
+        <div className="max-w-6xl w-full h-full mx-auto mt-10 p-5">
           <form className="w-full">
             <table className="w-full">
               <tbody className="flex flex-col gap-2">
@@ -173,7 +171,7 @@ const Cart = () => {
                       </h3>
                       <p>{event.ticket.zone}</p>
                       <p
-                        className="text-red-600 mt-3"
+                        className="text-red-600 mt-3 cursor-pointer"
                         onClick={() => removeEvent(index)}
                       >
                         Quitar
@@ -225,7 +223,11 @@ const Cart = () => {
                 ))}
               </tbody>
             </table>
-            <div className="flex flex-col-reverse md:flex-row mt-4">
+            <h1 className="text-md font-light mt-5 italic">
+              La entrada para los eventos es por medio de QR. Los botoletos
+              estarán siendo enviados al correo electrónico.
+            </h1>
+            <div className="flex flex-col-reverse md:flex-row mt-3">
               <div className="w-full md:w-1/2 flex flex-col gap-2 p-5">
                 <h1 className="font-bold text-xl">Métodos de pago</h1>
                 <p className="text-sm">

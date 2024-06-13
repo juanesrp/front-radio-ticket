@@ -28,6 +28,7 @@ export const Navbar = () => {
   const jwt = require("jsonwebtoken");
   const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
+  console.log("este es mi carrito", cart);
 
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
@@ -128,6 +129,15 @@ export const Navbar = () => {
       }
     };
 
+    const params = new URLSearchParams(window.location.search);
+    console.log("Estoy en params", params);
+
+    if (params.get("success") === "true") {
+      console.log("Estoy en success");
+
+      localStorage.removeItem("cart");
+    }
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -211,6 +221,8 @@ export const Navbar = () => {
   };
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    console.log(storedCart);
+
     setCart(storedCart);
   }, []);
 
@@ -255,7 +267,7 @@ export const Navbar = () => {
               <Link href="/cart" className="relative">
                 <img src="/shop.svg" alt="carrito" className="h-8" />
                 {cart.length > 0 && (
-                  <span className="absolute top-2 right-1 bg-red-600 text-white rounded-full w-3 h-3 flex justify-center items-center text-xs"></span>
+                  <span className="absolute top-2 right-1 bg-red-600 rounded-full w-3 h-3 flex justify-center items-center text-xs"></span>
                 )}
               </Link>
             </div>
