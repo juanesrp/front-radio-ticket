@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import { Discount, IEvent } from '@/interfaces'
 import { getDiscountId, postDiscount } from '@/utils/discount.util'
@@ -8,7 +9,7 @@ import { BiCheck, BiError, BiMoneyWithdraw } from "react-icons/bi";
 import { toast } from "sonner";
 
 const CreateDiscountSuperAdmin = ({ event }: { event: IEvent }) => {
-  const [discount, setDiscount] = useState('');
+  const [discount, setDiscount] = useState<string>('');
   const [allDiscount, setAllDiscount] = useState<Discount[]>([])
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +97,7 @@ const CreateDiscountSuperAdmin = ({ event }: { event: IEvent }) => {
               </div>
 
             </form>
-            <div className='flex flex-col mt-5 border-2'>
+            <div className='flex  flex-col w-[28rem] mt-5 border-2'>
               <h3 className='text-center border-2 font-bold'>DESCUENTOS CREADOS</h3>
               {allDiscount.length > 0 ? (
                 <div>
