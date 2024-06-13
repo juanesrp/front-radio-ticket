@@ -1,22 +1,23 @@
-'use client'
+"use client";
 
 import { IEvent } from "@/interfaces";
 import { formatDate } from "@/utils/formatDate";
 import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Coordinates, Map } from "@/components/Map";
 import { BiCheck, BiError, BiCartAdd } from "react-icons/bi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-
 const EventDetail = ({ event }: { event: IEvent }) => {
   const router = useRouter();
   const [selectedZone, setSelectedZone] = useState(event.tickets[0].zone);
   const [selectedPrice, setSelectedPrice] = useState(event.tickets[0].price);
+  const [selectedStock, setSelectedStock] = useState(event.tickets[0].stock);
   const [quantity, setQuantity] = useState(1);
   const [userSession, setUserSession] = useState();
-  const API_KEY = 'NEXT_PUBLIC_MAPS_API_KEY';
+  const API_KEY = "NEXT_PUBLIC_MAPS_API_KEY";
+  console.log(event);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -49,22 +50,31 @@ const EventDetail = ({ event }: { event: IEvent }) => {
       localStorage.setItem("cart", JSON.stringify(cart));
       toast(
         <div style={{ display: "flex", alignItems: "center" }}>
-          <BiCartAdd style={{ color: "green", fontSize: "60px", marginRight: "10px" }} />
-          <span style={{ marginLeft: "10px" }}>¡Añadido al carrito con éxito!</span>
+          <BiCartAdd
+            style={{ color: "green", fontSize: "60px", marginRight: "10px" }}
+          />
+          <span style={{ marginLeft: "10px" }}>
+            ¡Añadido al carrito con éxito!
+          </span>
         </div>,
         {
           duration: 1000,
         }
       );
       setTimeout(() => {
-        router.push("/cart")
+        window.location.reload();
+        router.push("/cart");
       }, 1000);
     } else {
       toast(
         <div style={{ display: "flex", alignItems: "center" }}>
-          <BiError style={{ color: "red", fontSize: "50px", marginRight: "10px" }} />
-          <span style={{ marginLeft: "10px" }}>Debes iniciar sesión para comprar</span>
-        </div>,
+          <BiError
+            style={{ color: "red", fontSize: "50px", marginRight: "10px" }}
+          />
+          <span style={{ marginLeft: "10px" }}>
+            Debes iniciar sesión para comprar
+          </span>
+        </div>
       );
       router.push("/login");
     }
@@ -77,6 +87,8 @@ const EventDetail = ({ event }: { event: IEvent }) => {
     const ticket = event.tickets.find((ticket) => ticket.zone === zone);
     if (ticket) {
       setSelectedPrice(ticket.price);
+      setSelectedStock(ticket.stock);
+      setQuantity(1); // Reset quantity to 1 when zone changes
     }
   };
 
@@ -89,10 +101,15 @@ const EventDetail = ({ event }: { event: IEvent }) => {
 
   const handleIncrement = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setQuantity(quantity + 1);
+    if (quantity < selectedStock) {
+      setQuantity(quantity + 1);
+    }
   };
 
-  const cordinates: Coordinates = { lat: Number(event.latitude), lng: Number(event.longitude) };
+  const cordinates: Coordinates = {
+    lat: Number(event.latitude),
+    lng: Number(event.longitude),
+  };
 
   return (
     <section className="pt-10 mb-10">
@@ -101,14 +118,17 @@ const EventDetail = ({ event }: { event: IEvent }) => {
           <img src={event.imgUrl} className="w-full max-w-96" />
         </div>
         <div className="grid-cols-1">
-
           <div className="flex flex-col mt-5 text-center md:text-left ">
             <h1 className="text-3xl font-bold">
               {formatDate(event.date)} | {event.name}
             </h1>
-            <h2 className="text-lg font-normal">${selectedPrice}</h2>
+            <h2 className="text-lg font-normal">{selectedPrice}</h2>
+            <span className="text-sm text-red-600">
+              {selectedStock <= 10 && selectedStock > 0
+                ? `Quedan los ultimos ${selectedStock} boletos!!`
+                : ""}
+            </span>
           </div>
-
 
           <form className="mt-4 flex flex-wrap w-full px-3 gap-1">
             <div className="flex flex-col w-2/3 lg:w-5/12">
@@ -141,13 +161,21 @@ const EventDetail = ({ event }: { event: IEvent }) => {
                 />
                 <button
                   onClick={handleDecrement}
-                  className="absolute top-0 bottom-0 left-0 text-center w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200"
+                  className={`absolute top-0 bottom-0 left-0 text-center w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${
+                    quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={quantity <= 1}
                 >
                   -
                 </button>
                 <button
                   onClick={handleIncrement}
-                  className="absolute top-0 bottom-0 right-0 w-7 border-solid border-r-2 border-l-2  border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200"
+                  className={`absolute top-0 bottom-0 right-0 w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${
+                    quantity >= selectedStock
+                      ? "opacity-50 cursor-not-allowed bg-gray-400"
+                      : ""
+                  }`}
+                  disabled={quantity >= selectedStock}
                 >
                   +
                 </button>
@@ -156,26 +184,23 @@ const EventDetail = ({ event }: { event: IEvent }) => {
             <div className="flex w-full mt-4  ml-3 lg:w-1/3 lg:items-end">
               <button
                 onClick={handleBuy}
-                className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700"
+                disabled={selectedStock === 0}
+                className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700 disabled:bg-red-300"
               >
-                AGREGAR AL CARRITO
+                {selectedStock > 0 ? `AGREGAR AL CARRITO` : "AGOTADO"}
               </button>
             </div>
 
             <Map coordinates={cordinates} />
 
             <div className="flex flex-col mt-5">
-              <h1 className="text-xl font-bold mb-4">
-                {event.address}
-              </h1>
+              <h1 className="text-xl font-bold mb-4">{event.address}</h1>
 
               <div>
                 <p>{event.description}</p>
               </div>
             </div>
-
           </form>
-
         </div>
       </div>
     </section>
