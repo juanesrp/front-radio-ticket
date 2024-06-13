@@ -214,6 +214,10 @@ export const Navbar = () => {
     setCart(storedCart);
   }, []);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   return (
     <>
       <div className="bg-black">
@@ -332,7 +336,7 @@ export const Navbar = () => {
               <Link href={homePath}>
                 <span className=" hover:text-white  text-2xs transition duration-300">
                   {authUser ? (
-                    authUser.name
+                    authUser.name.toLocaleUpperCase()
                   ) : (
                     <img src="/avatar.svg" alt="avatar" className="h-7" />
                   )}
@@ -381,7 +385,7 @@ export const Navbar = () => {
             </Link>
             <Link href={homePath}>
               <span className="p-4 hover:text-white  text-sm transition duration-300">
-                {authUser ? authUser.name : "CUENTA"}
+                {authUser ? authUser.name.toLocaleUpperCase() : "CUENTA"}
               </span>
             </Link>
             {authUser ? (

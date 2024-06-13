@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar/Navbar";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { Toaster } from 'sonner';
 import Refreshtoken2 from "@/components/Refreshtoken/Refreshtoken2";
+import Chatbot from "@/components/ChatBot/ChatBot";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,6 +32,7 @@ export default function RootLayout({
             </div>
             <Refreshtoken2 />
             <MyFooter />
+            <Chatbot/>
           </div>
         </body>
       </UserProvider>

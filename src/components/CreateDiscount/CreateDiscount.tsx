@@ -9,7 +9,7 @@ import { BiMoneyWithdraw, BiError } from "react-icons/bi";
 import { toast } from "sonner";
 
 const CreateDiscount = ({ event }: { event: IEvent }) => {
-  const [discount, setDiscount] = useState("");
+  const [discount, setDiscount] = useState<string>("");
   const [allDiscount, setAllDiscount] = useState<Discount[]>([])
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +108,7 @@ const CreateDiscount = ({ event }: { event: IEvent }) => {
                 </button>
               </div>
             </form>
-            <div className='flex flex-col mt-5 border-2'>
+            <div className='flex flex-col w-[28rem] mt-5 border-2'>
               <h3 className='text-center border-2 font-bold'>DESCUENTOS CREADOS</h3>
               {allDiscount.length > 0 ? (
                 <div>

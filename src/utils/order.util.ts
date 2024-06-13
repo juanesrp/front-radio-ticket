@@ -67,3 +67,33 @@ export const generateSubscription = async () => {
     console.log(error);
   }
 };
+
+export const getOrderByUser = async () => {
+  try {
+    const userSesion = localStorage.getItem("userSession");
+    let token: string | null = null;
+
+    if (userSesion) {
+      const userSesionToken = JSON.parse(userSesion);
+      token = userSesionToken ? userSesionToken.token : null;
+    } else {
+      return { error: "No se encontró userSesion en el localStorage" };
+    }
+
+    if (!token) {
+      return { error: "Token no encontrado en userSesion" };
+    }
+    const res = await axios.get(`${api}/orders/ofUser`, {
+      headers: {
+
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    console.log("🚀 ~ getOrderByUser ~ res:", res)
+    return { data: res.data };
+  } catch (error: any) {
+    console.log(error);
+    return { error: error.message };
+  }
+}
