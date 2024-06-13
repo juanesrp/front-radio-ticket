@@ -70,14 +70,12 @@ function SuperAdmin() {
     }, [router])
 
     const toggleAdminStatus = async (id: string, isAdmin: boolean) => {
-        const confirmation = confirm(`¿Estás seguro de que quieres ${isAdmin ? 'activar' : 'desactivar'} el rol de administrador para este usuario?`);
-        if (!confirmation) {
-            return;
-        }
-
         const res = await putUser(id, isAdmin);
         if (res.status !== 200) {
-            alert("Error al cambiar el estado de administrador del usuario");
+            toast('Error al cambiar el estado de administrador del usuario', {
+                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                duration: 2000
+            });
             return;
         }
         if (res.data !== null && res.data.isAdmin !== undefined) {
@@ -88,11 +86,12 @@ function SuperAdmin() {
                 return user;
             });
             setUsers(updatedUsers);
-            alert(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`);
+            toast(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`, {
+                icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
+                duration: 2000
+            });
         }
     };
-
-
     useEffect(() => {
         fetchEvents(currentPage);
     }, [currentPage]);
@@ -225,6 +224,6 @@ function SuperAdmin() {
             </div>
         </>
     )
-}
+};
 
 export default SuperAdmin
