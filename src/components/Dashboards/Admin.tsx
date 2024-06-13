@@ -7,8 +7,7 @@ import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';
-import { BiError } from "react-icons/bi";
-import { toast } from "sonner";
+
 
 const Admin = () => {
     const [authUser, setAuthUser] = useState<UserData | null>(null);
@@ -27,9 +26,7 @@ const Admin = () => {
                     const eventsData = await getEventsOfAdmin();
                     if ('error' in eventsData) {
                         if (eventsData.error === "Invalid token") {
-                            toast("El token es inválido. Vuelve a iniciar sesión.", {
-                                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
-                            });
+                            alert("El token es inválido. Vuelve a iniciar sesión.");
                             localStorage.removeItem("userSession");
                             localStorage.removeItem("cart");
                             window.location.href = "/login";
