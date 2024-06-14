@@ -32,7 +32,7 @@ export const Navbar = () => {
   const jwt = require("jsonwebtoken");
   const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
-  
+
 
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
@@ -86,6 +86,9 @@ export const Navbar = () => {
     }
   }, [user?.sid]);
 
+
+  const token = user?.idToken;
+
   const search = async (keyword: string) => {
     try {
       const res = await getSearch(keyword);
@@ -94,6 +97,7 @@ export const Navbar = () => {
       console.error("Error fetching search results:", error);
     }
   }
+
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
@@ -109,7 +113,7 @@ export const Navbar = () => {
       router.push(`/concerts?keyword=${searchKeyword}`);
     }
   };
-  
+
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -400,7 +404,7 @@ export const Navbar = () => {
           ref={sidebarRef}
           className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
             }`}
-            
+
         >
           <input
             type="search"
