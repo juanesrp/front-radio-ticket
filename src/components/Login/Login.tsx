@@ -67,11 +67,15 @@ const Login: React.FC = () => {
           toast("Te has logueado correctamente", {
             icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
           });
+
           router.push("/");
         } else {
           toast("Te has logueado correctamente", {
             icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
           });
+          if (!decodedToken.isPremium) {
+            localStorage.setItem("showSubscriptionModal", "true");
+          }
           router.push("/");
         }
       } else {

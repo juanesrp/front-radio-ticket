@@ -11,10 +11,15 @@ import {
 } from "@/utils/events.util";
 import { ICategory, IEvent } from "@/interfaces";
 import { getCategories } from "@/utils/categories.util";
+import { useSearchContext } from "@/context/SearchContext";
 
-const Events = () => {
+
+
+const Events: React.FC = () => {
+  const { searchKeyword } = useSearchContext();
   const eventsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
+  const [allEvents, setAllEvents] = useState<IEvent[]>([]);
   const [events, setEvents] = useState<IEvent[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [totalEventsFetched, setTotalEventsFetched] = useState(false);
@@ -73,11 +78,19 @@ const Events = () => {
           category || undefined
         );
       }
-      setEvents(events);
+      setAllEvents(events);
       setTotalEventsFetched(events.length < eventsPerPage);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
+  };
+
+  const filterEventsByKeyword = (events: IEvent[], keyword: string): IEvent[] => {
+    const trimmedKeyword = keyword ? keyword.trim().toLowerCase() : ""; 
+    if (trimmedKeyword === "") {
+      return events;
+    }
+    return events.filter(event => event.name.toLowerCase().includes(trimmedKeyword));
   };
 
   const fetchCategories = async () => {
@@ -93,6 +106,12 @@ const Events = () => {
     fetchCategories();
     fetchEvents(currentPage, category);
   }, [currentPage, sortBy, category]);
+
+  useEffect(() => {
+    const filteredEvents = filterEventsByKeyword(allEvents, searchKeyword);
+    setEvents(filteredEvents);
+    setTotalEventsFetched(filteredEvents.length < eventsPerPage);
+  }, [searchKeyword, allEvents]);
 
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber > 0) {

@@ -247,3 +247,24 @@ export const postImage = async (formData: FormData): Promise<AxiosResponse<any, 
     return { error: "Error al subir la imagen" };
   }
 }
+
+export const getSearch = async (keyword: string) => {
+  try {
+    const res = await axios.get(`${api}/events/search?keyword=${keyword}`)
+    return res.data
+  } catch (error: any) {
+    if (error.response) {
+      // El servidor respondió con un código de estado fuera del rango de 2xx
+      console.error('Error response:', error.response.data);
+      console.error('Error status:', error.response.status);
+      console.error('Error headers:', error.response.headers);
+    } else if (error.request) {
+      // La solicitud se realizó pero no se recibió respuesta
+      console.error('Error request:', error.request);
+    } else {
+      // Algo ocurrió al configurar la solicitud que desencadenó un error
+      console.error('Error message:', error.message);
+    }
+    throw new Error(error.message);
+  }
+}
