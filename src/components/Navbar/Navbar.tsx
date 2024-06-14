@@ -82,7 +82,7 @@ export const Navbar = () => {
   }, [user?.sid]);
 
   const token = user?.idToken;
-  console.log({ token });
+
 
   const toggleModal = () => {
     setIsOpen(!isOpen);

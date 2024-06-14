@@ -4,6 +4,7 @@ export interface IEvent {
   description: string;
   imgUrl: string;
   date: string;
+  launchdate: string;
   address: string;
   latitude: string;
   longitude: string;

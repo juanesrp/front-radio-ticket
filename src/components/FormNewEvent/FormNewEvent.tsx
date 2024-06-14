@@ -14,6 +14,7 @@ const FormNewEvent = () => {
     const [image, setImage] = useState<File | null>(null)
     const [authUser, setAuthUser] = useState<UserData | null>(null);
     const [minDate, setMinDate] = useState<string>("")
+    const [maxDate, setMaxDate] = useState<string>("");
     const [categories, setCategories] = useState<ICategory[]>([]);
     const router = useRouter()
     const [input, setInput] = useState({
@@ -22,6 +23,7 @@ const FormNewEvent = () => {
         imgUrl: "",
         category: "",
         date: "",
+        launchdate: "",
         address: "",
         longitude: "",
         latitude: "",
@@ -51,6 +53,10 @@ const FormNewEvent = () => {
         const today = new Date().toISOString().split("T")[0];
         setMinDate(today);
     }, [])
+
+    useEffect(() => {
+        setMaxDate(input.date);
+    }, [input.date]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -107,7 +113,7 @@ const FormNewEvent = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!input.name || !input.description || !input.category || !input.date || !input.latitude || !input.address || !input.longitude ||
+        if (!input.name || !input.description || !input.category || !input.date || !input.launchdate || !input.latitude || !input.address || !input.longitude ||
             !input.tickets[0].price || !input.tickets[0].stock || !input.tickets[0].zone || !image) {
             toast("Por favor completa todos los campos", {
                 icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
@@ -211,6 +217,11 @@ const FormNewEvent = () => {
                         <div className='flex flex-col'>
                             <label htmlFor="date" className='text-gray-700 font-semibold my-2'>Fecha del evento*</label>
                             <input type="date" id='date' name='date' className='rounded-md' min={minDate} value={input.date} onChange={handleChange} />
+                        </div>
+
+                        <div className='flex flex-col'>
+                            <label htmlFor="launchdate" className='text-gray-700 font-semibold my-2'>Fecha de lanzamiento*</label>
+                            <input type="date" id='launchdate' name='launchdate' className='rounded-md' min={minDate} value={input.launchdate} onChange={handleChange} />
                         </div>
 
                         <div className='flex flex-col'>
