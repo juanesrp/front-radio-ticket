@@ -7,6 +7,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { Toaster } from 'sonner';
 import Refreshtoken2 from "@/components/Refreshtoken/Refreshtoken2";
 import Chatbot from "@/components/ChatBot/ChatBot";
+import { SearchProvider } from "@/context/SearchContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <UserProvider>
         <body className={inter.className}>
+          <SearchProvider>
           <div className="flex flex-col min-h-screen">
             <div className="flex-grow">
               <Navbar />
@@ -34,6 +36,7 @@ export default function RootLayout({
             <MyFooter />
             <Chatbot/>
           </div>
+          </SearchProvider>
         </body>
       </UserProvider>
       <Toaster

@@ -12,11 +12,14 @@ import { ICartItem } from "@/interfaces";
 import { refresh } from "@/utils/refresh";
 import { BiCheck, BiError, BiLogOutCircle } from "react-icons/bi";
 import { toast } from "sonner";
+import { getSearch } from "@/utils/events.util";
+import { useSearchContext } from "@/context/SearchContext";
 const api = process.env.NEXT_PUBLIC_API;
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
 
 export const Navbar = () => {
+  const { searchKeyword, setSearchKeyword } = useSearchContext();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -24,11 +27,12 @@ export const Navbar = () => {
   const [authUser, setAuthUser] = useState<UserData | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const pathname = usePathname();
   const jwt = require("jsonwebtoken");
   const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
-  console.log("este es mi carrito", cart);
+  
 
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
@@ -82,9 +86,30 @@ export const Navbar = () => {
     }
   }, [user?.sid]);
 
-  const token = user?.idToken;
-  console.log({ token });
+  const search = async (keyword: string) => {
+    try {
+      const res = await getSearch(keyword);
+      setSearchResults(res);
+    } catch (error: any) {
+      console.error("Error fetching search results:", error);
+    }
+  }
 
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    if (e.target.value) {
+      search(e.target.value);
+    } else {
+      setSearchResults([]);
+    }
+  }
+
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      router.push(`/concerts?keyword=${searchKeyword}`);
+    }
+  };
+  
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -257,6 +282,9 @@ export const Navbar = () => {
                   <input
                     type="search"
                     className="bg-[#3b3b3bd5] text-white max-[768px]:hidden rounded"
+                    value={searchKeyword}
+                    onChange={handleSearchInputChange}
+                    onKeyPress={handleSearchKeyPress}
                   />
                 </div>
               ) : (
@@ -329,6 +357,9 @@ export const Navbar = () => {
                     <input
                       type="search"
                       className="bg-[#3b3b3bd5] text-white rounded h-[1.5rem]"
+                      value={searchKeyword}
+                      onChange={handleSearchInputChange}
+                      onKeyPress={handleSearchKeyPress}
                     />
                   </div>
                 ) : (
@@ -346,9 +377,9 @@ export const Navbar = () => {
                 ""
               )}
               <Link href={homePath}>
-                <span className=" hover:text-white  text-2xs transition duration-300">
+                <span className=" hover:text-white  transition duration-300">
                   {authUser ? (
-                    authUser.name.toLocaleUpperCase()
+                    <span className="text-[0.8rem]">{authUser.name.toLocaleUpperCase()}</span>
                   ) : (
                     <img src="/avatar.svg" alt="avatar" className="h-7" />
                   )}
@@ -369,10 +400,14 @@ export const Navbar = () => {
           ref={sidebarRef}
           className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
             }`}
+            
         >
           <input
             type="search"
             className="bg-[#3b3b3bd5] text-white rounded w-9/12"
+            value={searchKeyword}
+            onChange={handleSearchInputChange}
+            onKeyPress={handleSearchKeyPress}
           />
           <div className="flex flex-col gap-4 items-center text-[#ffffff9b] text-lg">
             <Link href={"/"}>
@@ -396,7 +431,7 @@ export const Navbar = () => {
               </span>
             </Link>
             <Link href={homePath}>
-              <span className="p-4 hover:text-white  text-sm transition duration-300">
+              <span className="p-4 hover:text-white transition duration-300">
                 {authUser ? authUser.name.toLocaleUpperCase() : "CUENTA"}
               </span>
             </Link>
