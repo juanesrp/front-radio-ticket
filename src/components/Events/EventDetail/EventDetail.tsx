@@ -5,9 +5,10 @@ import { formatDate } from "@/utils/formatDate";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Coordinates, Map } from "@/components/Map";
-import { BiCheck, BiError, BiCartAdd } from "react-icons/bi";
+import { BiError, BiCartAdd } from "react-icons/bi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { isPast, parseISO } from "date-fns";
 
 const EventDetail = ({ event }: { event: IEvent }) => {
   const router = useRouter();
@@ -16,8 +17,15 @@ const EventDetail = ({ event }: { event: IEvent }) => {
   const [selectedStock, setSelectedStock] = useState(event.tickets[0].stock);
   const [quantity, setQuantity] = useState(1);
   const [userSession, setUserSession] = useState();
+  const [isLaunchDate, setIsLaunchDate] = useState(false);
   const API_KEY = "NEXT_PUBLIC_MAPS_API_KEY";
   console.log(event);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const launchDate = parseISO(event.launchdate);
+    setIsLaunchDate(isPast(launchDate) || currentDate >= launchDate);
+  }, [event.launchdate]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -130,66 +138,72 @@ const EventDetail = ({ event }: { event: IEvent }) => {
             </span>
           </div>
 
+          <div className="text-l">
+            <p> *Boletas disponibles a partir del {event.launchdate}*</p>
+          </div>
+
           <form className="mt-4 flex flex-wrap w-full px-3 gap-1">
-            <div className="flex flex-col w-2/3 lg:w-5/12">
-              <label htmlFor="Location" className="mb-2 text-xs font-semibold ">
-                LOCALIDAD
-              </label>
-              <select
-                name="Location"
-                value={selectedZone}
-                onChange={handleZoneChange}
-                className="border-none bg-gray-50 text-sm"
-              >
-                {event.tickets.map((ticket) => (
-                  <option key={ticket.id} value={ticket.zone}>
-                    {ticket.zone}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col w-[30%] lg:w-1/5">
-              <label htmlFor="quantity" className="mb-2 text-xs font-semibold">
-                CANTIDAD
-              </label>
-              <div className="flex items-center relative">
-                <input
-                  type="number"
-                  value={quantity}
-                  readOnly
-                  className=" w-full py-1 text-center bg-gray-50 border-none"
-                />
-                <button
-                  onClick={handleDecrement}
-                  className={`absolute top-0 bottom-0 left-0 text-center w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${
-                    quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  disabled={quantity <= 1}
-                >
-                  -
-                </button>
-                <button
-                  onClick={handleIncrement}
-                  className={`absolute top-0 bottom-0 right-0 w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${
-                    quantity >= selectedStock
-                      ? "opacity-50 cursor-not-allowed bg-gray-400"
-                      : ""
-                  }`}
-                  disabled={quantity >= selectedStock}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-            <div className="flex w-full mt-4  ml-3 lg:w-1/3 lg:items-end">
-              <button
-                onClick={handleBuy}
-                disabled={selectedStock === 0}
-                className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700 disabled:bg-red-300"
-              >
-                {selectedStock > 0 ? `AGREGAR AL CARRITO` : "AGOTADO"}
-              </button>
-            </div>
+            {isLaunchDate && (
+              <>
+                <div className="flex flex-col w-2/3 lg:w-5/12">
+                  <label htmlFor="Location" className="mb-2 text-xs font-semibold ">
+                    LOCALIDAD
+                  </label>
+                  <select
+                    name="Location"
+                    value={selectedZone}
+                    onChange={handleZoneChange}
+                    className="border-none bg-gray-50 text-sm"
+                  >
+                    {event.tickets.map((ticket) => (
+                      <option key={ticket.id} value={ticket.zone}>
+                        {ticket.zone}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col w-[30%] lg:w-1/5">
+                  <label htmlFor="quantity" className="mb-2 text-xs font-semibold">
+                    CANTIDAD
+                  </label>
+                  <div className="flex items-center relative">
+                    <input
+                      type="number"
+                      value={quantity}
+                      readOnly
+                      className=" w-full py-1 text-center bg-gray-50 border-none"
+                    />
+                    <button
+                      onClick={handleDecrement}
+                      className={`absolute top-0 bottom-0 left-0 text-center w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <button
+                      onClick={handleIncrement}
+                      className={`absolute top-0 bottom-0 right-0 w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${quantity >= selectedStock
+                        ? "opacity-50 cursor-not-allowed bg-gray-400"
+                        : ""
+                        }`}
+                      disabled={quantity >= selectedStock}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="flex w-full mt-4  ml-3 lg:w-1/3 lg:items-end">
+                  <button
+                    onClick={handleBuy}
+                    disabled={selectedStock === 0}
+                    className="bg-red-600 text-white p-2 max-h-12 w-full text-center text-sm hover:bg-red-700 disabled:bg-red-300"
+                  >
+                    {selectedStock > 0 ? `AGREGAR AL CARRITO` : "AGOTADO"}
+                  </button>
+                </div>
+              </>
+            )}
 
             <Map coordinates={cordinates} />
 
