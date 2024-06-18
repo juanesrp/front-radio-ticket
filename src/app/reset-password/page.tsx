@@ -5,16 +5,16 @@ import { BiCheck, BiError } from 'react-icons/bi';
 import { toast } from 'sonner';
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import { ResetPasswordProps } from "@/interfaces";
-import { validateChangePasswordForms } from "@/helpers/validateForms";
-
+import { ResetPasswordProps } from "../../interfaces";
+import { validateChangePasswordForms } from "../../helpers/validateForms";
+import { useRouter } from "next/navigation";
 
 const api = process.env.NEXT_PUBLIC_API;
 const ResetPassword: React.FC = () => {
+    const router = useRouter();
     const initialData = {
         password: "",
         confirmPassword: "",
-        token: "",
     }
 
     const [dataUser, setDataUser] = useState<ResetPasswordProps>(initialData)
@@ -60,9 +60,8 @@ const ResetPassword: React.FC = () => {
         }
 
         try {
-            const res = await axios.post(`${api}/auth/resetPassword`, {
-                ...dataUser,
-                token,
+            const res = await axios.post(`${api}/auth/NewPassword?token=${token}`, {
+                newPassword: dataUser.password
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,11 +72,8 @@ const ResetPassword: React.FC = () => {
                 toast('Cambio de contraseña realizado con éxito', {
                     icon: <BiCheck style={{ color: 'green', fontSize: '50px' }} />,
                 });
-                setDataUser({
-                    password: '',
-                    confirmPassword: '',
-                    token: '',
-                });
+                setDataUser(initialData);
+                router.push("/login");
             } else {
                 const parsedResponse = await res.data;
                 toast(parsedResponse.message, {
