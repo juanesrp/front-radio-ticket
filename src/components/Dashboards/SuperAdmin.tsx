@@ -9,7 +9,7 @@ import { formatDate } from '@/utils/formatDate';
 import { getUsers, putUser } from '@/utils/users.util';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BiCheck, BiError } from "react-icons/bi";
+import { BiCheck, BiError, BiLogOutCircle } from "react-icons/bi";
 import { toast } from "sonner";
 
 import React, { useEffect, useState } from 'react'
@@ -127,7 +127,9 @@ function SuperAdmin() {
                 setTotalUsersFetched(usersData.length < 3);
             } else if ('error' in usersData) {
                 if (usersData.error === "Invalid token") {
-                    alert("El token es inválido. Vuelve a iniciar sesión.");
+                    toast("Sesión cerrada", {
+                        icon: <BiLogOutCircle style={{ color: "red", fontSize: "50px" }} />,
+                      });
                     localStorage.removeItem("userSession");
                     localStorage.removeItem("cart");
                     window.location.href = "/login";

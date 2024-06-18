@@ -50,9 +50,11 @@ const FormNewEvent = () => {
     }, [coordinates])
 
     useEffect(() => {
-        const today = new Date().toISOString().split("T")[0];
-        setMinDate(today);
-    }, [])
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Asegúrate de que la fecha es solo la fecha sin hora
+        const formattedToday = today.toISOString().split('T')[0];
+        setMinDate(formattedToday);
+      }, []);
 
     useEffect(() => {
         setMaxDate(input.date);

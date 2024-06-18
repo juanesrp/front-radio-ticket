@@ -113,6 +113,26 @@ export const Navbar = () => {
       router.push(`/concerts?keyword=${searchKeyword}`);
     }
   };
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        if (isOpen) {
+          setIsOpen(false);
+        }
+        if (isVisible) {
+          setIsVisible(false);
+          // Agregar la lógica de redirección aquí
+          router.push(`/concerts?keyword=${searchKeyword}`);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, isVisible, searchKeyword, router]);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
