@@ -20,7 +20,7 @@ const Login: React.FC = () => {
 
   const handleRedirect = () => {
     window.location.href = "/api/auth/login?connection=googlex";
-  }
+  };
   const [dataUser, setDataUser] = useState<LoginProps>(loginData);
   const [errorUser, setErrorUser] = useState<LoginErrorProps>(loginData);
   const [showPassword, setShowPassword] = useState(false);
