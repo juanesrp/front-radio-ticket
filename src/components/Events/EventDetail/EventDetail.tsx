@@ -70,8 +70,7 @@ const EventDetail = ({ event }: { event: IEvent }) => {
         }
       );
       setTimeout(() => {
-        window.location.reload();
-        router.push("/cart");
+        window.location.href = "/cart";
       }, 1000);
     } else {
       toast(
