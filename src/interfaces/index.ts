@@ -8,6 +8,7 @@ export interface IEvent {
   address: string;
   latitude: string;
   longitude: string;
+  status: string;
   userEmail: string | null;
   ticketId: string;
   category: {
