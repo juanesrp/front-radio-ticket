@@ -54,3 +54,9 @@ export interface Discount {
 export interface DiscuontResponse {
   data: Discount;
 }
+
+export interface ResetPasswordProps {
+  password: string,
+  confirmPassword: string,
+  token?: string
+}
