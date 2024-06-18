@@ -1,7 +1,8 @@
 export interface UserData {
-    token: string,
-    name: string,
-    email: string,
-    isAdmin: boolean,
-    isSuperAdmin: boolean,
+  token: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+  isSuperAdmin: boolean;
+  isPremium: boolean;
 }

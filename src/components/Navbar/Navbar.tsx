@@ -118,7 +118,7 @@ export const Navbar = () => {
   };
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         if (isOpen) {
           setIsOpen(false);
         }
@@ -261,6 +261,7 @@ export const Navbar = () => {
                 toast("Sesión cerrada");
                 localStorage.removeItem("userSession");
                 localStorage.removeItem("cart");
+                localStorage.removeItem("showSubscriptionAlert");
                 window.location.href = "/api/auth/logout";
               },
             },
