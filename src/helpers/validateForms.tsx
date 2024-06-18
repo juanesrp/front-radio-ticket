@@ -42,7 +42,7 @@ export function validateRegisterForms(values: RegisterProps): RegisterErrorProps
     errors.name = 'El nombre debe iniciar con mayúscula'
   }
   if (!nameRegex.test(values.lastName)) {
-    errors.name = 'El apellido debe iniciar con mayúscula'
+    errors.lastName = 'El apellido debe iniciar con mayúscula'
   }
   if (!emailRegex.test(values.email)) {
     errors.email = "El Email no es válido";
