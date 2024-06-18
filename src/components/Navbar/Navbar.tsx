@@ -118,8 +118,15 @@ export const Navbar = () => {
   };
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && isOpen) {
-        setIsOpen(false);
+      if (e.key === 'Enter') {
+        if (isOpen) {
+          setIsOpen(false);
+        }
+        if (isVisible) {
+          setIsVisible(false);
+          // Agregar la lógica de redirección aquí
+          router.push(`/concerts?keyword=${searchKeyword}`);
+        }
       }
     };
 
@@ -128,21 +135,7 @@ export const Navbar = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && isVisible) {
-        setIsVisible(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isVisible]);
+  }, [isOpen, isVisible, searchKeyword, router]);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);

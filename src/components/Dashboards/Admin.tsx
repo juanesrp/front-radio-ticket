@@ -7,6 +7,8 @@ import { formatDate } from '@/utils/formatDate';
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';
+import { BiLogOutCircle } from 'react-icons/bi';
+import { toast } from 'sonner';
 
 
 const Admin = () => {
@@ -26,7 +28,9 @@ const Admin = () => {
                     const eventsData = await getEventsOfAdmin();
                     if ('error' in eventsData) {
                         if (eventsData.error === "Invalid token") {
-                            alert("El token es inválido. Vuelve a iniciar sesión.");
+                            toast("Sesión cerrada", {
+                                icon: <BiLogOutCircle style={{ color: "red", fontSize: "50px" }} />,
+                              });
                             localStorage.removeItem("userSession");
                             localStorage.removeItem("cart");
                             window.location.href = "/login";
