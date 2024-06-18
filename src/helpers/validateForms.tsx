@@ -66,7 +66,6 @@ export function validateChangePasswordForms(values: ResetPasswordProps): ResetPa
   let errors: ResetPasswordProps = {
     password: "",
     confirmPassword: "",
-    token: " "
   }
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/;
 

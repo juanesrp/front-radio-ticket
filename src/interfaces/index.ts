@@ -59,5 +59,4 @@ export interface DiscuontResponse {
 export interface ResetPasswordProps {
   password: string;
   confirmPassword: string;
-  token?: string;
 }
