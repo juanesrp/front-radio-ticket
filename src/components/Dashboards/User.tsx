@@ -5,12 +5,14 @@ import { UserData } from "@/interfaces/userData";
 import { formatDate } from "@/utils/formatDate";
 import { getOrderByUser } from "@/utils/order.util";
 import { Order } from "@/interfaces/order";
+import Link from "next/link";
 
 const User = () => {
   const [authUser, setAuthUser] = useState<UserData | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [page, setPage] = useState<number>(1);
   const pageSize = 3;
+  console.log("authUser", authUser);
 
   useEffect(() => {
     const userSessionString = localStorage.getItem("userSession");
@@ -118,8 +120,25 @@ const User = () => {
           </div>
           <div className="md:col-span-1 bg-gray-100 shadow p-8 break-words self-start">
             <h2 className="font-bold">Detalles de la cuenta</h2>
-            <p>{authUser?.name}</p>
-            <p>{authUser?.email}</p>
+            <div className="flex flex-col gap-3">
+              <div>
+                <p>{authUser?.name}</p>
+                <p>{authUser?.email}</p>
+              </div>
+              <div>
+                {authUser?.isPremium ? (
+                  <span className="text-[#56c95a]">
+                    Eres usuario Premium. ¡Gracias!
+                  </span>
+                ) : (
+                  <Link href="/subscription">
+                    <span className="text-[#de4545] hover:underline">
+                      Pasate a Premium
+                    </span>
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
