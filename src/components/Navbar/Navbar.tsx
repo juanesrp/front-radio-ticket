@@ -32,7 +32,8 @@ export const Navbar = () => {
   const jwt = require("jsonwebtoken");
   const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
-
+  const [isPremium, setIsPremium] = useState<boolean>(false);
+  console.log("Es premium:", isPremium);
 
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
@@ -54,6 +55,10 @@ export const Navbar = () => {
 
           if (userSession) {
             setAuthUser(userSession);
+            setIsPremium(userSession.isPremium);
+            if (!decodedToken.isPremium) {
+              localStorage.setItem("showSubscriptionModal", "true");
+            }
             toast("Te has logeado correctamente", {
               icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
             });
@@ -86,7 +91,6 @@ export const Navbar = () => {
     }
   }, [user?.sid]);
 
-
   const token = user?.idToken;
 
   const search = async (keyword: string) => {
@@ -96,8 +100,7 @@ export const Navbar = () => {
     } catch (error: any) {
       console.error("Error fetching search results:", error);
     }
-  }
-
+  };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
@@ -106,10 +109,10 @@ export const Navbar = () => {
     } else {
       setSearchResults([]);
     }
-  }
+  };
 
   const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       router.push(`/concerts?keyword=${searchKeyword}`);
     }
   };
@@ -127,10 +130,10 @@ export const Navbar = () => {
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, isVisible, searchKeyword, router]);
 
@@ -198,6 +201,7 @@ export const Navbar = () => {
       : null;
     if (userSession) {
       setAuthUser(userSession);
+      setIsPremium(userSession.isPremium);
     } else if (protectedRoutes.includes(pathname)) {
       router.push("/login");
     }
@@ -207,8 +211,8 @@ export const Navbar = () => {
     ? authUser.isSuperAdmin
       ? "/dashSuperAdmin"
       : authUser.isAdmin
-        ? "/dashAdmi"
-        : "/dashMyUser"
+      ? "/dashAdmi"
+      : "/dashMyUser"
     : "/login";
 
   useEffect(() => {
@@ -235,9 +239,21 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     toast(
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <div>¿Estás seguro? Vas a cerrar sesión</div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "0.5rem",
+          }}
+        >
           {[
             {
               label: "Sí",
@@ -258,14 +274,13 @@ export const Navbar = () => {
             <button
               key={action.label}
               onClick={action.onClick}
-              className={`log-out ${action.label === 'Sí' ? 'yes' : 'no'}`}
+              className={`log-out ${action.label === "Sí" ? "yes" : "no"}`}
             >
               {action.label}
             </button>
           ))}
         </div>
-      </div>,
-
+      </div>
     );
   };
   useEffect(() => {
@@ -283,10 +298,11 @@ export const Navbar = () => {
     <>
       <div className="bg-black">
         <div
-          className={`${isFixed
-            ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
-            : "relative"
-            }`}
+          className={`${
+            isFixed
+              ? "max-[768px]:fixed max-[768px]:top-0 max-[768px]:left-0 max-[768px]:right-0 max-[768px]:bg-black max-[768px]:max-w-full max-[768px]:z-50"
+              : "relative"
+          }`}
         >
           <div className="text-white text-base flex justify-between items-center px-3 max-w-7xl mx-auto sm:border-b border-[#374151]">
             <div
@@ -297,7 +313,15 @@ export const Navbar = () => {
             </div>
             <div>
               <Link href={"/"}>
-                <img src="/logo2.png" alt="radioticket" className="h-20" />
+                {isPremium ? (
+                  <img
+                    src="/logoPremiun2.png"
+                    alt="radioticket"
+                    className="h-20"
+                  />
+                ) : (
+                  <img src="/logo2.png" alt="radioticket" className="h-20" />
+                )}
               </Link>
             </div>
             <div className="flex gap-1 items-center">
@@ -326,49 +350,54 @@ export const Navbar = () => {
           </div>
         </div>
         <div
-          className={`${isFixed
-            ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
-            : "relative"
-            }`}
+          className={`${
+            isFixed
+              ? "fixed top-0 left-0 right-0 bg-black max-w-full z-50"
+              : "relative"
+          }`}
         >
           <div className="text-[#ffffff9b] pr-5 pl-2 flex justify-between max-w-7xl mx-auto max-[768px]:hidden">
             <div className="py-5 text-sm">
               <Link href={"/"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/"
-                    ? "text-white border-b-[6px] border-red-600"
-                    : ""
-                    }`}
+                  className={`p-4 hover:text-white transition duration-300 ${
+                    pathname === "/"
+                      ? "text-white border-b-[6px] border-red-600"
+                      : ""
+                  }`}
                 >
                   INICIO
                 </span>
               </Link>
               <Link href={"/concerts"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/concerts"
-                    ? "text-white border-b-[6px] border-red-600"
-                    : ""
-                    }`}
+                  className={`p-4 hover:text-white transition duration-300 ${
+                    pathname === "/concerts"
+                      ? "text-white border-b-[6px] border-red-600"
+                      : ""
+                  }`}
                 >
                   PROXIMOS EVENTOS
                 </span>
               </Link>
               <Link href={"/about"}>
                 <span
-                  className={`p-4  hover:text-white transition duration-300 ${pathname === "/about"
-                    ? "text-white border-b-[6px] border-red-600"
-                    : ""
-                    }`}
+                  className={`p-4  hover:text-white transition duration-300 ${
+                    pathname === "/about"
+                      ? "text-white border-b-[6px] border-red-600"
+                      : ""
+                  }`}
                 >
                   ACERCA DE LA PAGINA
                 </span>
               </Link>
               <Link href={"/contact"}>
                 <span
-                  className={`p-4 hover:text-white transition duration-300 ${pathname === "/contact"
-                    ? "text-white border-b-[6px] border-red-600"
-                    : ""
-                    }`}
+                  className={`p-4 hover:text-white transition duration-300 ${
+                    pathname === "/contact"
+                      ? "text-white border-b-[6px] border-red-600"
+                      : ""
+                  }`}
                 >
                   CONTACTO
                 </span>
@@ -403,7 +432,9 @@ export const Navbar = () => {
               <Link href={homePath}>
                 <span className=" hover:text-white  transition duration-300">
                   {authUser ? (
-                    <span className="text-[0.8rem]">{authUser.name.toLocaleUpperCase()}</span>
+                    <span className="text-[0.8rem]">
+                      {authUser.name.toLocaleUpperCase()}
+                    </span>
                   ) : (
                     <img src="/avatar.svg" alt="avatar" className="h-7" />
                   )}
@@ -415,16 +446,17 @@ export const Navbar = () => {
       </div>
 
       <div
-        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${isOpen
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 transition-opacity lg:hidden z-50 ${
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
       >
         <div
           ref={sidebarRef}
-          className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-
+          className={`w-64 h-screen bg-[#1f1c1cfa] p-4 flex flex-col gap-2 items-center transition-transform transform lg:hidden ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <input
             type="search"
