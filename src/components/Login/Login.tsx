@@ -192,7 +192,7 @@ const Login: React.FC = () => {
           Continuar con Google
         </button>
         <p className="mt-6 text-center text-gray-600 text-lg">
-          <Link href="/resetpassword" className="hover:underline">
+          <Link href="/forgotpassword" className="hover:underline">
             ¿Olvidó su contraseña?{" "}
           </Link>
 
