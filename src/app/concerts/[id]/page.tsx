@@ -5,7 +5,6 @@ import React from "react";
 
 const page = async ({ params }: { params: { id: string } }) => {
   const event: IEvent = await getEventById(params.id);
-  console.log("console log evento", event);
 
   return (
     <div className="bg-gray-50">

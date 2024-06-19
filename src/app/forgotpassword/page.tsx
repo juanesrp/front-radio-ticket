@@ -1,15 +1,15 @@
-'use client';
-import axios from 'axios';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { BiCheck, BiError } from 'react-icons/bi';
-import { toast } from 'sonner';
+"use client";
+import axios from "axios";
+import Link from "next/link";
+import React, { useState } from "react";
+import { BiCheck, BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const api = process.env.NEXT_PUBLIC_API;
 
 const ForgotPassword: React.FC = () => {
   const [dataUser, setDataUser] = useState({
-    email: '',
+    email: "",
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,44 +17,43 @@ const ForgotPassword: React.FC = () => {
       ...dataUser,
       [event.target.name]: event.target.value,
     });
-    console.log(`Input ${event.target.name} changed:`, event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (dataUser.email.trim() === '') {
-      toast('Por favor, ingresa un email válido', {
-        icon: <BiError style={{ color: 'red', fontSize: '50px' }} />,
+    if (dataUser.email.trim() === "") {
+      toast("Por favor, ingresa un email válido", {
+        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
       });
       return;
     }
     try {
       const res = await axios.post(`${api}/auth/forgotPassword`, dataUser, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       if (res.status === 201) {
-        toast('Se ha enviado el email exitosamente', {
-          icon: <BiCheck style={{ color: 'green', fontSize: '50px' }} />,
+        toast("Se ha enviado el email exitosamente", {
+          icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
         });
         setDataUser({
-          email: '',
+          email: "",
         });
       } else {
         const parsedResponse = await res.data;
         toast(parsedResponse.message, {
-          icon: <BiError style={{ color: 'red', fontSize: '50px' }} />,
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
         });
       }
     } catch (error: any) {
       if (error.response) {
-        toast('Error: ' + error.response.data.message, {
-          icon: <BiError style={{ color: 'red', fontSize: '50px' }} />,
+        toast("Error: " + error.response.data.message, {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
         });
       } else {
-        toast('Ha ocurrido un error al enviar el email', {
-          icon: <BiError style={{ color: 'red', fontSize: '50px' }} />,
+        toast("Ha ocurrido un error al enviar el email", {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
         });
       }
     }
@@ -80,7 +79,7 @@ const ForgotPassword: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex justify-center" style={{ marginTop: '2rem' }}>
+          <div className="flex justify-center" style={{ marginTop: "2rem" }}>
             <button
               type="submit"
               className="w-80 py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -89,7 +88,7 @@ const ForgotPassword: React.FC = () => {
             </button>
           </div>
         </form>
-        <Link href="/login" className='flex justify-center'>
+        <Link href="/login" className="flex justify-center">
           <span className="text-gray-600 hover:text-gray-800 focus:outline-none block mx-auto cursor-pointer hover:selection:">
             Cancelar
           </span>
