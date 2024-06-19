@@ -89,7 +89,7 @@ const EventsHome = () => {
             {events.length > 0 && (
               <Link
                 href="/concerts"
-                className="relative block box-content h-full z-[1] group"
+                className="relative block box-content h-full group"
                 style={{
                   backgroundImage: `url(${events[0].imgUrl})`,
                   backgroundSize: "cover",
@@ -97,7 +97,7 @@ const EventsHome = () => {
                 }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300"></div>
-                <div className="absolute left-0 bottom-12 z-[2] mr-2">
+                <div className="absolute left-0 bottom-12 mr-2">
                   <p className="inline text-2xl bg-red-600 text-white decoration-clone text-center px-3 sm:text-3xl leading-snug">
                     PRÓXIMOS EVENTOS
                   </p>

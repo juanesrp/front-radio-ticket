@@ -33,7 +33,6 @@ export const Navbar = () => {
   const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
   const [isPremium, setIsPremium] = useState<boolean>(false);
-  console.log("Es premium:", isPremium);
 
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
@@ -182,11 +181,8 @@ export const Navbar = () => {
     };
 
     const params = new URLSearchParams(window.location.search);
-    console.log("Estoy en params", params);
 
     if (params.get("success") === "true") {
-      console.log("Estoy en success");
-
       localStorage.removeItem("cart");
     }
 
@@ -286,7 +282,6 @@ export const Navbar = () => {
   };
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    console.log(storedCart);
 
     setCart(storedCart);
   }, []);

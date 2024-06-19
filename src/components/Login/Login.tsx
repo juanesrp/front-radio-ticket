@@ -30,7 +30,6 @@ const Login: React.FC = () => {
       ...dataUser,
       [event.target.name]: event.target.value,
     });
-    console.log(`Input ${event.target.name} changed:`, event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +45,6 @@ const Login: React.FC = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log({ res });
       if (res.status === 201) {
         const { token } = res.data;
         // Decodificar el token

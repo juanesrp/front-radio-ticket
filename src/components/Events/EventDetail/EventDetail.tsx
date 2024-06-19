@@ -20,14 +20,15 @@ const EventDetail = ({ event }: { event: IEvent }) => {
   const [userSession, setUserSession] = useState();
   const [isPremiumUser, setIsPremiumUser] = useState(false);
   const API_KEY = "NEXT_PUBLIC_MAPS_API_KEY";
-  console.log(event);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       const userToken = localStorage.getItem("userSession");
       const userData = JSON.parse(userToken!);
-      setUserSession(userData);
-      setIsPremiumUser(userData.isPremium);
+      if (userToken) {
+        setUserSession(userData);
+        setIsPremiumUser(userData.isPremium);
+      }
     }
   }, []);
 
@@ -135,10 +136,24 @@ const EventDetail = ({ event }: { event: IEvent }) => {
           </div>
 
           <div className="text-l">
-            <p> *Boletas generales disponibles a partir del {formatDate(event.launchdate)}*</p>
+            <p>
+              {" "}
+              *Boletas generales disponibles a partir del{" "}
+              {formatDate(event.launchdate)}*
+            </p>
           </div>
           <div className="text-l">
-            <p> *Recuerda que si eres <Link href={"/subscription"} className="text-red-600 hover:text-red-700 transition duration-300">PREMIUM,</Link> tienes la opción de comprar un día antes.*</p>
+            <p>
+              {" "}
+              *Recuerda que si eres{" "}
+              <Link
+                href={"/subscription"}
+                className="text-red-600 hover:text-red-700 transition duration-300"
+              >
+                PREMIUM,
+              </Link>{" "}
+              tienes la opción de comprar un día antes.*
+            </p>
           </div>
 
           <form className="mt-4 flex flex-wrap w-full px-3 gap-1">
@@ -161,11 +176,14 @@ const EventDetail = ({ event }: { event: IEvent }) => {
             </div>
 
             {event.status !== "not available" &&
-              (event.status === "Available" ||
-                (event.status === "available for premium" && isPremiumUser)) ? (
+            (event.status === "Available" ||
+              (event.status === "available for premium" && isPremiumUser)) ? (
               <>
                 <div className="flex flex-col w-[30%] lg:w-1/5">
-                  <label htmlFor="quantity" className="mb-2 text-xs font-semibold">
+                  <label
+                    htmlFor="quantity"
+                    className="mb-2 text-xs font-semibold"
+                  >
                     CANTIDAD
                   </label>
                   <div className="flex items-center relative">
@@ -177,18 +195,20 @@ const EventDetail = ({ event }: { event: IEvent }) => {
                     />
                     <button
                       onClick={handleDecrement}
-                      className={`absolute top-0 bottom-0 left-0 text-center w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                      className={`absolute top-0 bottom-0 left-0 text-center w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${
+                        quantity <= 1 ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                       disabled={quantity <= 1}
                     >
                       -
                     </button>
                     <button
                       onClick={handleIncrement}
-                      className={`absolute top-0 bottom-0 right-0 w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${quantity >= selectedStock
+                      className={`absolute top-0 bottom-0 right-0 w-7 border-solid border-r-2 border-l-2 border-[#e7e7e7] hover:bg-[#e7e7e7] transition duration-200 ${
+                        quantity >= selectedStock
                           ? "opacity-50 cursor-not-allowed bg-gray-400"
                           : ""
-                        }`}
+                      }`}
                       disabled={quantity >= selectedStock}
                     >
                       +

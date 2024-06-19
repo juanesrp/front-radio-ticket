@@ -4,8 +4,6 @@ import { getEventById } from "@/utils/events.util";
 import React from "react";
 
 const page = async ({ params }: { params: { id: string } }) => {
-  console.log("estoy aqui!!");
-
   const event: IEvent = await getEventById(params.id);
   return (
     <>

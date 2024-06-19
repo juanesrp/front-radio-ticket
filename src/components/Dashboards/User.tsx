@@ -12,7 +12,6 @@ const User = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [page, setPage] = useState<number>(1);
   const pageSize = 3;
-  console.log("authUser", authUser);
 
   useEffect(() => {
     const userSessionString = localStorage.getItem("userSession");
