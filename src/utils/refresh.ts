@@ -2,7 +2,7 @@ import axios from "axios";
 const api = process.env.NEXT_PUBLIC_API;
 
 export const refresh = async () => {
-
+    const jwt = require("jsonwebtoken");
     const userSessionString = localStorage.getItem('userSession');
     if (!userSessionString) {
         throw new Error('User session not found in localStorage');
@@ -19,8 +19,11 @@ export const refresh = async () => {
         });
 
         const newToken = response.data.newToken;
+        const decodedToken = jwt.decode(newToken);
 
         userSession.token = newToken;
+        userSession.isAdmin = decodedToken.isAdmin;
+        userSession.isPremium = decodedToken.isPremium;
 
 
         localStorage.setItem('userSession', JSON.stringify(userSession));
