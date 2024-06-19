@@ -42,7 +42,10 @@ const Chatbot = () => {
           botResponse = (
             <>
               Puedes convertirte en usuario premium accediendo{" "}
-              <Link href="/subscription" className="text-blue-500">
+              <Link
+                href="/subscription"
+                className="text-red-600 hover:text-red-700 transition duration-300"
+              >
                 ¡AQUI!
               </Link>
               . Recuerda que debes iniciar sesión para ingresar.
@@ -62,7 +65,7 @@ const Chatbot = () => {
             "Tus tickets deberían llegar de inmediato después de confirmar la compra.";
           break;
         case "¿Cuánto cuesta ser premium?":
-          botResponse = "La suscripción premium cuesta $2.99 al mes.";
+          botResponse = "La suscripción premium cuesta $2.98 al mes.";
           break;
         case "¿Qué método de pago aceptan?":
           botResponse = "Aceptamos PayPal.";
@@ -172,7 +175,7 @@ const Chatbot = () => {
       </div>
       {isOpen && (
         <div
-          className="fixed bottom-20 right-5 w-[22rem] bg-gray-100 p-4 rounded-sm z-[1]"
+          className="fixed bottom-20 right-5 w-[22rem] bg-gray-50 p-4 rounded-sm"
           style={{
             boxShadow:
               "0 0.1rem 0.2rem #00000033, 0 0.1rem 0.5rem #0000004d, 0 0.2rem 1.5rem #00000066",
@@ -198,7 +201,7 @@ const Chatbot = () => {
                   style={{
                     padding: "5px",
                     backgroundColor:
-                      message.sender === "bot" ? "#dbdbdb" : "#ee1818",
+                      message.sender === "bot" ? "#e8e8e8" : "#ee1818",
                     color: message.sender === "bot" ? "#000" : "#fff",
                   }}
                 >
