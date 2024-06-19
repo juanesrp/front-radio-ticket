@@ -1,3 +1,4 @@
+import { ResetPasswordProps } from "@/interfaces";
 import { LoginErrorProps, LoginProps } from "@/interfaces/login";
 import { RegisterErrorProps, RegisterProps } from "@/interfaces/register";
 
@@ -33,17 +34,15 @@ export function validateRegisterForms(values: RegisterProps): RegisterErrorProps
   }
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/;
-                        
   const nameRegex = /^[A-Z][a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
 
-  console.log({values})
-
+  console.log({ values })
 
   if (!nameRegex.test(values.name)) {
     errors.name = 'El nombre debe iniciar con mayúscula'
   }
   if (!nameRegex.test(values.lastName)) {
-    errors.name = 'El apellido debe iniciar con mayúscula'
+    errors.lastName = 'El apellido debe iniciar con mayúscula'
   }
   if (!emailRegex.test(values.email)) {
     errors.email = "El Email no es válido";
@@ -52,7 +51,7 @@ export function validateRegisterForms(values: RegisterProps): RegisterErrorProps
     errors.phone = "El teléfono es requerido";
   }
   if (!passwordRegex.test(values.password)) {
-    errors.password = "La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!@#$%^&*), y tener entre 8 y 15 caracteres de longitud." ;
+    errors.password = "La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!@#$%^&*), y tener entre 8 y 15 caracteres de longitud.";
   }
 
   if (values.password !== values.confirmPassword) {
@@ -62,3 +61,21 @@ export function validateRegisterForms(values: RegisterProps): RegisterErrorProps
   return errors
 }
 
+
+export function validateChangePasswordForms(values: ResetPasswordProps): ResetPasswordProps {
+  let errors: ResetPasswordProps = {
+    password: "",
+    confirmPassword: "",
+  }
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/;
+
+  if (!passwordRegex.test(values.password)) {
+    errors.password = "La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!@#$%^&*), y tener entre 8 y 15 caracteres de longitud.";
+  }
+
+  if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = "Las contraseñas no coinciden";
+  }
+
+  return errors
+}

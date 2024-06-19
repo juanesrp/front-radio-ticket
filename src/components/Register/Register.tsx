@@ -3,7 +3,10 @@ import { validateRegisterForms } from "@/helpers/validateForms";
 import { RegisterErrorProps, RegisterProps } from "@/interfaces/register";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { BiCheck, BiError } from "react-icons/bi";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 const api = process.env.NEXT_PUBLIC_API;
 
 
@@ -17,15 +20,25 @@ const Register: React.FC = () => {
         password: '',
         confirmPassword: ''
     }
-
     const [dataUser, setDataUser] = useState<RegisterProps>(initialdata);
     const [errorUser, setErrorUser] = useState<RegisterErrorProps>(initialdata);
     const [showPassword, setShowPassword] = useState(false)
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        console.log('handleSubmit', event.target);
-        event.preventDefault();
+    useEffect(() => {
+        if (!errorUser.name && !errorUser.lastName && !errorUser.phone && !errorUser.email && !errorUser.password && !errorUser.confirmPassword) {
+            return;
+        }
+        const errors = validateRegisterForms(dataUser)
+        if (errors.name !== "" || errors.lastName !== "" || errors.phone! == "" || errors.email !== "" || errors.password !== "" || errors.confirmPassword !== "") {
+            setErrorUser(errors);
+        } else {
+            setErrorUser(initialdata);
+        }
 
+    }, [dataUser]);
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         const errors = validateRegisterForms(dataUser)
         if (errors.name !== ""
             || errors.lastName !== ""
@@ -34,7 +47,6 @@ const Register: React.FC = () => {
             || errors.password !== ""
             || errors.confirmPassword !== ""
         ) {
-            console.log({ errors });
             setErrorUser(errors)
             return false;
         }
@@ -45,23 +57,32 @@ const Register: React.FC = () => {
                 }
             })
             if (res.status === 201) {
-                alert("El usuario se ha registrado exitosamente");
+                toast("El usuario se ha registrado exitosamente", {
+                    icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
+                });
                 setDataUser(initialdata);
                 router.push("/login");
             } else {
                 const parsedResponse = await res.data;
-                alert(parsedResponse.message);
+                toast(parsedResponse.message, {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             }
         } catch (error: any) {
             console.error("Error:", error);
             if (error.response) {
-              alert("Error: " + error.response.data.message);
+                toast("Error: " + error.response.data.message, {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             } else {
-              alert("Ha ocurrido un error durante el registro");
+                toast("Ha ocurrido un error durante el registro", {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             }
             throw new Error("Registration failed");
-          }
+        }
     };
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value);
         setDataUser({
@@ -131,22 +152,38 @@ const Register: React.FC = () => {
                     />
                     {errorUser.email && <p className="text-lg italic text-red-500">{errorUser.email}</p>}
                 </div>
-                <div className="mb-2">
+
+
+                <div className="mb-6 relative">
                     <label htmlFor="password" className="block text-gray-700 font-semibold mb-2 text-xl">
                         Contraseña
                     </label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        value={dataUser.password}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errorUser.password && <p className="text-lg italic text-red-500">{errorUser.password}</p>}
-                </div>
-                <div>
-                    <p className="mb-3 mt-0 text-sm text-gray-600"> La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!@#$%^&*), y tener entre 8 y 15 caracteres de longitud.</p>
+                    <div className="relative">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            id="password"
+                            value={dataUser.password}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                            >
+                                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                            </button>
+                        </div>
+                    </div>
+                    <p
+                        className={`mb-3 mt-2 text-justify text-sm ${errorUser.password ? 'text-red-500 text-l' : 'text-gray-600 text-l'
+                            }`}
+                    >
+                        La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un
+                        carácter especial (!@#$%^&*), y tener entre 8 y 15 caracteres de longitud.
+                    </p>
                 </div>
                 <div className="mb-6">
                     <label htmlFor="password" className="block text-gray-700 font-semibold mb-2 text-xl">

@@ -1,12 +1,39 @@
-import React from 'react';
+'use client'
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
 const MyFooter: React.FC = () => {
+  const [isPremium, setIsPremium] = useState<boolean>(false);
+
+  useEffect(() => {
+    const userSessionString = localStorage.getItem('userSession');
+    console.log('userSessionString:', userSessionString);
+
+    if (userSessionString) {
+      const userSession = JSON.parse(userSessionString);
+      console.log('userSession:', userSession);
+      console.log('userSession.isPremium:', userSession.isPremium);
+
+      setIsPremium(userSession.isPremium);
+    }
+  }, []);
+
   return (
     <footer className="bg-black text-white py-4">
       <div className="mx-auto w-full max-w-screen-xl px-4">
         <div className="md:flex md:items-center md:justify-between">
-          <div className="flex justify-center md:justify-start">
-            <img src="/logo2.png" alt="logo en general" className="h-20 me-3" />
+          <div>
+            <Link href={"/"}>
+              {isPremium ? (
+                <img
+                  src="/logoPremiun2.png"
+                  alt="radioticket"
+                  className="h-20"
+                />
+              ) : (
+                <img src="/logo2.png" alt="radioticket" className="h-20" />
+              )}
+            </Link>
           </div>
           <div className="mt-4 md:mt-0 md:ml-4">
             <ul className="flex flex-wrap justify-center text-sm font-medium text-white">

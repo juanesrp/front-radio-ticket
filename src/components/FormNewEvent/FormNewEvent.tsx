@@ -7,11 +7,14 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Search } from '../Map/Search';
 import { Coordinates, Map } from '../Map';
+import { BiCheck, BiError, BiCheckShield } from "react-icons/bi";
+import { toast } from "sonner";
 
 const FormNewEvent = () => {
     const [image, setImage] = useState<File | null>(null)
     const [authUser, setAuthUser] = useState<UserData | null>(null);
     const [minDate, setMinDate] = useState<string>("")
+    const [maxDate, setMaxDate] = useState<string>("");
     const [categories, setCategories] = useState<ICategory[]>([]);
     const router = useRouter()
     const [input, setInput] = useState({
@@ -20,6 +23,7 @@ const FormNewEvent = () => {
         imgUrl: "",
         category: "",
         date: "",
+        launchdate: "",
         address: "",
         longitude: "",
         latitude: "",
@@ -46,9 +50,15 @@ const FormNewEvent = () => {
     }, [coordinates])
 
     useEffect(() => {
-        const today = new Date().toISOString().split("T")[0];
-        setMinDate(today);
-    }, [])
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Asegúrate de que la fecha es solo la fecha sin hora
+        const formattedToday = today.toISOString().split('T')[0];
+        setMinDate(formattedToday);
+      }, []);
+
+    useEffect(() => {
+        setMaxDate(input.date);
+    }, [input.date]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -105,9 +115,11 @@ const FormNewEvent = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!input.name || !input.description || !input.category || !input.date || !input.latitude || !input.address ||!input.longitude ||
+        if (!input.name || !input.description || !input.category || !input.date || !input.launchdate || !input.latitude || !input.address || !input.longitude ||
             !input.tickets[0].price || !input.tickets[0].stock || !input.tickets[0].zone || !image) {
-            alert("Por favor completa todos los campos");
+            toast("Por favor completa todos los campos", {
+                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+            });
             return
         }
 
@@ -122,12 +134,16 @@ const FormNewEvent = () => {
                     imageUrl = res.data.secure_url;
                 } else if ('error' in res) {
                     if (res.error === "Invalid token") {
-                        alert("El token es inválido. Vuelve a iniciar sesion.");
+                        toast("El token es inválido. Vuelve a iniciar sesion.", {
+                            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                        });
                         localStorage.removeItem("userSession");
                         localStorage.removeItem("cart");
                         window.location.href = "/login";
                     } else {
-                        alert(res.error);
+                        toast(res.error, {
+                            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                        });
                         return;
                     }
                 }
@@ -149,16 +165,20 @@ const FormNewEvent = () => {
             }))
         };
         const result = await postEvent(eventData);
-        console.log({eventData});
-        console.log({result});
+        console.log({ eventData });
+        console.log({ result });
         if (result.error) {
             if (result.error === "Invalid token") {
                 console.log("token invalido")
             } else {
-                alert(result.error);
+                toast(result.error, {
+                    icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                });
             }
         } else {
-            alert("Se creó el evento correctamente");
+            toast("Se creó el evento correctamente", {
+                icon: <BiCheckShield style={{ color: "green", fontSize: "50px" }} />,
+            });
             router.push("/concerts");
         }
     };
@@ -202,8 +222,13 @@ const FormNewEvent = () => {
                         </div>
 
                         <div className='flex flex-col'>
-                            <label htmlFor="address"  className='text-gray-700 font-semibold my-2'>Dirección*</label>
-                            <input type="text" id='address' name='address' className='rounded-md'  value={input.address} onChange={handleChange} />
+                            <label htmlFor="launchdate" className='text-gray-700 font-semibold my-2'>Fecha de lanzamiento*</label>
+                            <input type="date" id='launchdate' name='launchdate' className='rounded-md' min={minDate} value={input.launchdate} onChange={handleChange} />
+                        </div>
+
+                        <div className='flex flex-col'>
+                            <label htmlFor="address" className='text-gray-700 font-semibold my-2'>Dirección*</label>
+                            <input type="text" id='address' name='address' className='rounded-md' value={input.address} onChange={handleChange} />
                         </div>
 
                         <div className='flex flex-col map-search-wrapper'>

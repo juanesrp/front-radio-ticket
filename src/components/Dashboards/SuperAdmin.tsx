@@ -1,3 +1,4 @@
+
 /* eslint-disable @next/next/no-img-element */
 "use client"
 import { IEvent } from '@/interfaces';
@@ -8,6 +9,8 @@ import { formatDate } from '@/utils/formatDate';
 import { getUsers, putUser } from '@/utils/users.util';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { BiCheck, BiError, BiLogOutCircle } from "react-icons/bi";
+import { toast } from "sonner";
 
 import React, { useEffect, useState } from 'react'
 
@@ -15,13 +18,14 @@ function SuperAdmin() {
     const [authUser, setAuthUser] = useState<UserData | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [events, setEvents] = useState<IEvent[]>([]);
-    const [showEvents, setShowEvents] = useState(false);
-    const [showUsers, setShowUsers] = useState(false);
+    const [showEvents, setShowEvents] = useState<boolean>(false);
+    const [showUsers, setShowUsers] = useState<boolean>(false);
     const eventsPerPage = 3;
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalEventsFetched, setTotalEventsFetched] = useState(false);
+    const [currentEventsPage, setCurrentEventsPage] = useState<number>(1);
+    const [currentUsersPage, setCurrentUsersPage] = useState<number>(1);
+    const [totalEventsFetched, setTotalEventsFetched] = useState<boolean>(false);
+    const [totalUsersFetched, setTotalUsersFetched] = useState<boolean>(false);
     const router = useRouter();
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,12 +36,14 @@ function SuperAdmin() {
             } else {
                 setAuthUser(userSession);
                 try {
-                    const res = await getUsers(1, 3)
+                    const res = await getUsers(1, 3);
                     if (Array.isArray(res)) {
                         setUsers(res);
                     } else if ('error' in res) {
                         if (res.error === "Invalid token") {
-                            alert("El token es inválido. Vuelve a iniciar sesión.");
+                            toast("El token es inválido. Vuelve a iniciar sesión.", {
+                                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                            });
                             localStorage.removeItem("userSession");
                             localStorage.removeItem("cart");
                             window.location.href = "/login";
@@ -52,7 +58,7 @@ function SuperAdmin() {
                     const eventsData = await getEvents(1, 5);
                     if ('error' in eventsData) {
                         if (eventsData.error === "Invalid token") {
-                            console.log("Token invalido")
+                            console.log("Token invalido");
                         }
                     } else {
                         setEvents(eventsData);
@@ -62,19 +68,16 @@ function SuperAdmin() {
                 }
             }
         }
-        fetchData()
-    }, [router])
+        fetchData();
+    }, [router]);
 
     const toggleAdminStatus = async (id: string, isAdmin: boolean) => {
-        const confirmation = confirm(`¿Estás seguro de que quieres ${isAdmin ? 'activar' : 'desactivar'} el rol de administrador para este usuario?`);
-
-        if (!confirmation) {
-            return; 
-        }
-
         const res = await putUser(id, isAdmin);
         if (res.status !== 200) {
-            alert("Error al cambiar el estado de administrador del usuario");
+            toast('Error al cambiar el estado de administrador del usuario', {
+                icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+                duration: 2000
+            });
             return;
         }
         if (res.data !== null && res.data.isAdmin !== undefined) {
@@ -85,20 +88,27 @@ function SuperAdmin() {
                 return user;
             });
             setUsers(updatedUsers);
-            alert(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`);
+            toast(`El estado de administrador ha sido ${isAdmin ? 'activado' : 'desactivado'}`, {
+                icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
+                duration: 2000
+            });
         }
-    }
+    };
+    
+    useEffect(() => {
+        fetchEvents(currentEventsPage);
+    }, [currentEventsPage]);
 
     useEffect(() => {
-        fetchEvents(currentPage);
-    }, [currentPage]);
+        fetchUsers(currentUsersPage);
+    }, [currentUsersPage]);
 
     const fetchEvents = async (page: number) => {
         try {
             const eventsData = await getEvents(page, eventsPerPage);
             if ('error' in eventsData) {
                 if (eventsData.error === "Invalid token") {
-                    console.log("Token invalido")
+                    console.log("Token invalido");
                 }
             } else {
                 setEvents(eventsData);
@@ -107,14 +117,42 @@ function SuperAdmin() {
         } catch (error) {
             console.error("Error al obtener eventos:", error);
         }
-    }
+    };
 
-    const handlePageChange = (pageNumber: number) => {
-        if (pageNumber > 0) {
-            setCurrentPage(pageNumber);
+    const fetchUsers = async (page: number) => {
+        try {
+            const usersData = await getUsers(page, 3);
+            if (Array.isArray(usersData)) {
+                setUsers(usersData);
+                setTotalUsersFetched(usersData.length < 3);
+            } else if ('error' in usersData) {
+                if (usersData.error === "Invalid token") {
+                    toast("Sesión cerrada", {
+                        icon: <BiLogOutCircle style={{ color: "red", fontSize: "50px" }} />,
+                      });
+                    localStorage.removeItem("userSession");
+                    localStorage.removeItem("cart");
+                    window.location.href = "/login";
+                }
+            } else {
+                console.error("La respuesta de getUsers no es un array:", usersData);
+            }
+        } catch (error) {
+            console.error("Error al obtener usuarios:", error);
         }
-    }
+    };
 
+    const handlePageChangeEvents = (pageNumber: number) => {
+        if (pageNumber > 0) {
+            setCurrentEventsPage(pageNumber);
+        }
+    };
+
+    const handlePageChangeUsers = (pageNumber: number) => {
+        if (pageNumber > 0) {
+            setCurrentUsersPage(pageNumber);
+        }
+    };
 
     return (
         <>
@@ -156,16 +194,16 @@ function SuperAdmin() {
                                     </ul>
                                     <div className="flex justify-center my-4">
                                         <button
-                                            onClick={() => handlePageChange(currentPage - 1)}
-                                            disabled={currentPage === 1}
-                                            className="mr-2 px-4 py-2 bg-gray-200  hover:scale-105 transition-transform"
+                                            onClick={() => handlePageChangeEvents(currentEventsPage - 1)}
+                                            disabled={currentEventsPage === 1}
+                                            className="mr-2 px-4 py-2 bg-gray-200 hover:scale-105 transition-transform"
                                         >
                                             Página Anterior
                                         </button>
                                         <button
-                                            onClick={() => handlePageChange(currentPage + 1)}
+                                            onClick={() => handlePageChangeEvents(currentEventsPage + 1)}
                                             disabled={totalEventsFetched}
-                                            className="ml-2 px-4 py-2 bg-gray-200  hover:scale-105 transition-transform"
+                                            className="ml-2 px-4 py-2 bg-gray-200 hover:scale-105 transition-transform"
                                         >
                                             Página Siguiente
                                         </button>
@@ -191,7 +229,7 @@ function SuperAdmin() {
                                                     <span className='font-bold'>Nombre</span>
                                                     <p> {`${user.name} ${user.lastName}`}</p>
                                                 </div>
-                                                <div className='max-[768px]:flex max-[768px]:flex-col max-[768px]:items-center'>
+                                                <div className='max-[768px]:flex max-[768px]:flex-col max-[768px-px-2 items-center'>
                                                     <span className='font-bold'>Email</span>
                                                     <p> {user.email}</p>
                                                 </div>
@@ -209,8 +247,25 @@ function SuperAdmin() {
                                         </div>
                                     </li>
                                 ))}
+                                <div className="flex justify-center my-4">
+                                    <button
+                                        onClick={() => handlePageChangeUsers(currentUsersPage - 1)}
+                                        disabled={currentUsersPage === 1}
+                                        className="mr-2 px-4 py-2 bg-gray-200 hover:scale-105 transition-transform"
+                                    >
+                                        Página Anterior
+                                    </button>
+                                    <button
+                                        onClick={() => handlePageChangeUsers(currentUsersPage + 1)}
+                                        disabled={totalUsersFetched}
+                                        className="ml-2 px-4 py-2 bg-gray-200 hover:scale-105 transition-transform"
+                                    >
+                                        Página Siguiente
+                                    </button>
+                                </div>
                             </ul>
                         )}
+
                     </div>
                     <div className='md:col-span-1 bg-gray-100 p-8 shadow break-words self-start'>
                         <h2 className='font-bold'>Detalles de la cuenta</h2>
@@ -221,6 +276,7 @@ function SuperAdmin() {
             </div>
         </>
     )
-}
+};
 
-export default SuperAdmin
+export default SuperAdmin;
+

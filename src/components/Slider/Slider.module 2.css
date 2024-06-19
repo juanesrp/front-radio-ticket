@@ -1,0 +1,61 @@
+.div {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.container h1 {
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+.inner {
+    width: fit-content;
+    display: flex;
+    animation: loop 30s linear infinite;
+}
+
+.tag {
+    display: flex;
+    background-color: #f3f4f6;
+    padding: 0.5rem 0.8rem;
+    margin: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.tag img {
+    width: 9rem;
+    aspect-ratio: 3/3;
+    max-width: none;
+}
+
+.fade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+@keyframes loop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .tag img {
+        width: 6rem;
+    }
+}

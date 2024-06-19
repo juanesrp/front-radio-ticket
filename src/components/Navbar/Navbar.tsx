@@ -10,11 +10,16 @@ import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
 import axios from "axios";
 import { ICartItem } from "@/interfaces";
 import { refresh } from "@/utils/refresh";
+import { BiCheck, BiError, BiLogOutCircle } from "react-icons/bi";
+import { toast } from "sonner";
+import { getSearch } from "@/utils/events.util";
+import { useSearchContext } from "@/context/SearchContext";
 const api = process.env.NEXT_PUBLIC_API;
 
 const protectedRoutes = ["/dashMyUser", "/dashAdmi"];
 
 export const Navbar = () => {
+  const { searchKeyword, setSearchKeyword } = useSearchContext();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -22,10 +27,13 @@ export const Navbar = () => {
   const [authUser, setAuthUser] = useState<UserData | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const pathname = usePathname();
   const jwt = require("jsonwebtoken");
   const { user } = useUser();
   const [cart, setCart] = useState<ICartItem[]>([]);
+  const [isPremium, setIsPremium] = useState<boolean>(false);
+  console.log("Es premium:", isPremium);
 
   useEffect(() => {
     const sendUser = async (user: UserProfile) => {
@@ -47,10 +55,18 @@ export const Navbar = () => {
 
           if (userSession) {
             setAuthUser(userSession);
-            alert("Te has logeado correctamente");
+            setIsPremium(userSession.isPremium);
+            if (!decodedToken.isPremium) {
+              localStorage.setItem("showSubscriptionModal", "true");
+            }
+            toast("Te has logeado correctamente", {
+              icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
+            });
           }
         } else {
-          alert(res.data.message);
+          toast(res.data.message, {
+            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          });
         }
       } catch (error: any) {
         console.error("Error sending user:", error);
@@ -59,9 +75,13 @@ export const Navbar = () => {
           error.response.data &&
           error.response.data.message
         ) {
-          alert("Error: " + error.response.data.message);
+          toast("Error: " + error.response.data.message, {
+            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          });
         } else {
-          alert("An unexpected error occurred.");
+          toast("An unexpected error occurred.", {
+            icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+          });
         }
       }
     };
@@ -72,7 +92,50 @@ export const Navbar = () => {
   }, [user?.sid]);
 
   const token = user?.idToken;
-  console.log({ token });
+
+  const search = async (keyword: string) => {
+    try {
+      const res = await getSearch(keyword);
+      setSearchResults(res);
+    } catch (error: any) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+    if (e.target.value) {
+      search(e.target.value);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      router.push(`/concerts?keyword=${searchKeyword}`);
+    }
+  };
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        if (isOpen) {
+          setIsOpen(false);
+        }
+        if (isVisible) {
+          setIsVisible(false);
+          // Agregar la lógica de redirección aquí
+          router.push(`/concerts?keyword=${searchKeyword}`);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, isVisible, searchKeyword, router]);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -118,6 +181,15 @@ export const Navbar = () => {
       }
     };
 
+    const params = new URLSearchParams(window.location.search);
+    console.log("Estoy en params", params);
+
+    if (params.get("success") === "true") {
+      console.log("Estoy en success");
+
+      localStorage.removeItem("cart");
+    }
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -129,6 +201,7 @@ export const Navbar = () => {
       : null;
     if (userSession) {
       setAuthUser(userSession);
+      setIsPremium(userSession.isPremium);
     } else if (protectedRoutes.includes(pathname)) {
       router.push("/login");
     }
@@ -150,7 +223,9 @@ export const Navbar = () => {
       } catch (error: any) {
         if (error.message === "Token expired") {
           console.error("Token expired, logging out user...");
-          window.alert("Sesión cerrada");
+          toast("Sesión cerrada", {
+            icon: <BiLogOutCircle style={{ color: "red", fontSize: "50px" }} />,
+          });
           localStorage.removeItem("userSession");
           localStorage.removeItem("cart");
           window.location.href = "/api/auth/logout";
@@ -163,21 +238,62 @@ export const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    const isConfirmed = window.confirm("¿Estás seguro? Vas a cerrar sesión!!");
-    if (isConfirmed) {
-      window.alert("Sesión cerrada");
-      localStorage.removeItem("userSession");
-      localStorage.removeItem("cart");
-      window.location.href = "/api/auth/logout";
-    } else {
-      window.alert("Cancelado");
-    }
+    toast(
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div>¿Estás seguro? Vas a cerrar sesión</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "0.5rem",
+          }}
+        >
+          {[
+            {
+              label: "Sí",
+              onClick: () => {
+                toast("Sesión cerrada");
+                localStorage.removeItem("userSession");
+                localStorage.removeItem("cart");
+                localStorage.removeItem("showSubscriptionAlert");
+                window.location.href = "/api/auth/logout";
+              },
+            },
+            {
+              label: "No",
+              onClick: () => {
+                toast.dismiss();
+              },
+            },
+          ].map((action) => (
+            <button
+              key={action.label}
+              onClick={action.onClick}
+              className={`log-out ${action.label === "Sí" ? "yes" : "no"}`}
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
   };
-
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    console.log(storedCart);
+
     setCart(storedCart);
   }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   return (
     <>
@@ -198,7 +314,15 @@ export const Navbar = () => {
             </div>
             <div>
               <Link href={"/"}>
-                <img src="/logo2.png" alt="radioticket" className="h-20" />
+                {isPremium ? (
+                  <img
+                    src="/logoPremiun2.png"
+                    alt="radioticket"
+                    className="h-20"
+                  />
+                ) : (
+                  <img src="/logo2.png" alt="radioticket" className="h-20" />
+                )}
               </Link>
             </div>
             <div className="flex gap-1 items-center">
@@ -207,6 +331,9 @@ export const Navbar = () => {
                   <input
                     type="search"
                     className="bg-[#3b3b3bd5] text-white max-[768px]:hidden rounded"
+                    value={searchKeyword}
+                    onChange={handleSearchInputChange}
+                    onKeyPress={handleSearchKeyPress}
                   />
                 </div>
               ) : (
@@ -217,7 +344,7 @@ export const Navbar = () => {
               <Link href="/cart" className="relative">
                 <img src="/shop.svg" alt="carrito" className="h-8" />
                 {cart.length > 0 && (
-                  <span className="absolute top-2 right-1 bg-red-600 text-white rounded-full w-3 h-3 flex justify-center items-center text-xs"></span>
+                  <span className="absolute top-2 right-1 bg-red-600 rounded-full w-3 h-3 flex justify-center items-center text-xs"></span>
                 )}
               </Link>
             </div>
@@ -284,6 +411,9 @@ export const Navbar = () => {
                     <input
                       type="search"
                       className="bg-[#3b3b3bd5] text-white rounded h-[1.5rem]"
+                      value={searchKeyword}
+                      onChange={handleSearchInputChange}
+                      onKeyPress={handleSearchKeyPress}
                     />
                   </div>
                 ) : (
@@ -301,9 +431,11 @@ export const Navbar = () => {
                 ""
               )}
               <Link href={homePath}>
-                <span className=" hover:text-white transition duration-300">
+                <span className=" hover:text-white  transition duration-300">
                   {authUser ? (
-                    authUser.name.toLocaleUpperCase()
+                    <span className="text-[0.8rem]">
+                      {authUser.name.toLocaleUpperCase()}
+                    </span>
                   ) : (
                     <img src="/avatar.svg" alt="avatar" className="h-7" />
                   )}
@@ -330,6 +462,9 @@ export const Navbar = () => {
           <input
             type="search"
             className="bg-[#3b3b3bd5] text-white rounded w-9/12"
+            value={searchKeyword}
+            onChange={handleSearchInputChange}
+            onKeyPress={handleSearchKeyPress}
           />
           <div className="flex flex-col gap-4 items-center text-[#ffffff9b] text-lg">
             <Link href={"/"}>

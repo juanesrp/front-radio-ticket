@@ -4,9 +4,11 @@ export interface IEvent {
   description: string;
   imgUrl: string;
   date: string;
+  launchdate: string;
   address: string;
   latitude: string;
   longitude: string;
+  status: string;
   userEmail: string | null;
   ticketId: string;
   category: {
@@ -52,4 +54,9 @@ export interface Discount {
 
 export interface DiscuontResponse {
   data: Discount;
+}
+
+export interface ResetPasswordProps {
+  password: string;
+  confirmPassword: string;
 }

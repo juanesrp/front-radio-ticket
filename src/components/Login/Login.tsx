@@ -6,7 +6,7 @@ import axios from "axios";
 import Link from "next/link";
 import { validateLoginForms } from "@/helpers/validateForms";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { BiCheck } from "react-icons/bi";
+import { BiCheck, BiError } from "react-icons/bi";
 import { toast } from "sonner";
 const api = process.env.NEXT_PUBLIC_API;
 
@@ -67,19 +67,27 @@ const Login: React.FC = () => {
           toast("Te has logueado correctamente", {
             icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
           });
+
           router.push("/");
         } else {
           toast("Te has logueado correctamente", {
             icon: <BiCheck style={{ color: "green", fontSize: "50px" }} />,
           });
+          if (!decodedToken.isPremium) {
+            localStorage.setItem("showSubscriptionModal", "true");
+          }
           router.push("/");
         }
       } else {
-        toast.error(res.data.message);
+        toast(res.data.message, {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        });
       }
     } catch (error: any) {
       console.error("Error:", error.response.data);
-      toast.error("Error: " + error.response.data.message);
+      toast("Error: " + error.response.data.message, {
+        icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+      });
       throw new Error(error);
     }
   };
@@ -184,7 +192,10 @@ const Login: React.FC = () => {
           Continuar con Google
         </button>
         <p className="mt-6 text-center text-gray-600 text-lg">
-          ¿Olvidó su contraseña?{" "}
+          <Link href="/forgotpassword" className="hover:underline">
+            ¿Olvidó su contraseña?{" "}
+          </Link>
+
           <Link href="/register" className="text-blue-500 hover:underline">
             Crear cuenta
           </Link>

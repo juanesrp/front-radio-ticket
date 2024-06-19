@@ -1,6 +1,8 @@
 "use client";
 import { generateSubscription } from "@/utils/order.util";
 import React, { useEffect, useState } from "react";
+import { BiCheck, BiError } from "react-icons/bi";
+import { toast } from "sonner";
 
 const Subscription = () => {
   const [userSession, setUserSession] = useState();
@@ -10,7 +12,9 @@ const Subscription = () => {
       const userToken = localStorage.getItem("userSession");
       setUserSession(JSON.parse(userToken!));
       if (!userToken) {
-        alert("Debes iniciar sesion");
+        toast("Debes iniciar sesion para realizar esta acción", {
+          icon: <BiError style={{ color: "red", fontSize: "50px" }} />,
+        });
         window.location.href = "/login";
       }
     }
@@ -49,18 +53,21 @@ const Subscription = () => {
                 </h2>
                 <ul className="space-y-2 text-gray-600 ">
                   <li className="flex items-center gap-2">
+                    <BiCheck className="text-green-400 text-xl" />
                     Acceso a los boletos un día antes de que salgan a la venta
                   </li>
-                  <li className="flex items-center gap-2">
+                  <li className="flex items-center gap-2 ">
+                    <BiCheck className="text-green-400 text-xl" />
                     El primero en enterarte de los eventos nuevos
                   </li>
                   <li className="flex items-center gap-2">
+                    <BiCheck className="text-green-400 text-xl" />
                     Descuentos en productos
                   </li>
                 </ul>
               </div>
               <div className="text-4xl font-bold text-red-600 content-center">
-                $2.99/mes
+                $2.98/mes
               </div>
             </div>
             <div className="flex justify-center">
