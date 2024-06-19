@@ -13,8 +13,6 @@ import { ICategory, IEvent } from "@/interfaces";
 import { getCategories } from "@/utils/categories.util";
 import { useSearchContext } from "@/context/SearchContext";
 
-
-
 const Events: React.FC = () => {
   const { searchKeyword } = useSearchContext();
   const eventsPerPage = 12;
@@ -26,16 +24,11 @@ const Events: React.FC = () => {
   const [sortBy, setSortBy] = useState("recentsToOlds");
   const [category, setCategory] = useState("");
 
-  console.log(categories);
-  console.log(category);
-
   const fetchEvents = async (page: number, category: string) => {
     try {
       let events: IEvent[] = [];
 
       if (sortBy === "oldsToRecents") {
-        console.log("Estoy en el if", category);
-
         events = await getEventsByDate(
           page,
           eventsPerPage,
@@ -85,12 +78,17 @@ const Events: React.FC = () => {
     }
   };
 
-  const filterEventsByKeyword = (events: IEvent[], keyword: string): IEvent[] => {
-    const trimmedKeyword = keyword ? keyword.trim().toLowerCase() : ""; 
+  const filterEventsByKeyword = (
+    events: IEvent[],
+    keyword: string
+  ): IEvent[] => {
+    const trimmedKeyword = keyword ? keyword.trim().toLowerCase() : "";
     if (trimmedKeyword === "") {
       return events;
     }
-    return events.filter(event => event.name.toLowerCase().includes(trimmedKeyword));
+    return events.filter((event) =>
+      event.name.toLowerCase().includes(trimmedKeyword)
+    );
   };
 
   const fetchCategories = async () => {

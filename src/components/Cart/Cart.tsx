@@ -15,7 +15,6 @@ const Cart = () => {
   const [discountCode, setDiscountCode] = useState("");
   const [discounts, setDiscounts] = useState<{ [key: string]: number }>({});
   const [paymentMethod, setPaymentMethod] = useState("");
-  console.log(paymentMethod);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -86,15 +85,12 @@ const Cart = () => {
   const applyDiscount = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      console.log("Este es el discount code que voy a enviar: ", discountCode);
-
       const data = await getDiscount(discountCode);
 
       const updatedDiscounts = { ...discounts, [data.event.id]: data.discount };
       setDiscounts(updatedDiscounts);
       setCart(cart);
       calculateTotal(cart, discounts);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -294,8 +290,8 @@ const Cart = () => {
                       return (
                         acc +
                         event.ticket.price *
-                        event.ticket.quantity *
-                        (discount / 100)
+                          event.ticket.quantity *
+                          (discount / 100)
                       );
                     }, 0)}
                   </p>
