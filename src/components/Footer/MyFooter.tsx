@@ -1,9 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 const MyFooter: React.FC = () => {
   const [isPremium, setIsPremium] = useState<boolean>(false);
+  const pathname = usePathname()
 
   useEffect(() => {
     const userSessionString = localStorage.getItem("userSession");
@@ -13,7 +16,7 @@ const MyFooter: React.FC = () => {
 
       setIsPremium(userSession.isPremium);
     }
-  }, []);
+  }, [pathname]);
 
   return (
     <footer className="bg-black text-white py-4">
