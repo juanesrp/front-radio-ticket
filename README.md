@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Radio Ticket
 
-## Getting Started
+## Descripción
 
-First, run the development server:
+Esta aplicación permite a los usuarios comprar boletos para eventos de música. Incluye roles de usuario como Super Admin, Admin y Usuario, y ofrece opciones de suscripción premium.
+
+## Características
+
+- Crear y gestionar eventos de música.
+- Roles de usuario con diferentes permisos: Super Admin, Admin y Usuario.
+- Suscripción Premium con beneficios exclusivos.
+- Notificaciones de nuevos eventos y descuentos.
+- Integración con pasarelas de pago como PayPal y MercadoPago.
+
+## Instalación
+
+Instrucciones paso a paso para instalar y configurar el proyecto en un entorno local. Por ejemplo:
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/juanesrp/front-radio-ticket
+   ```
+2. Navega a tu proyecto
+   ```bash
+   cd front-radio-ticket
+   ```
+3. Instala dependencias
+   ```bash
+   npm install
+   ```
+4. Inicia la aplicación
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. En tu navegador abre el proyecto en http://localhost:3000/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+##Tecnologias usadas
+Una lista de las tecnologías y herramientas utilizadas en el proyecto. Por ejemplo:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- NextJS
+- Tailwind CSS
+- Axios
+- PayPal SDK
+- MercadoPago SDK
+- API googles maps
 
-## Learn More
+##Autores
 
-To learn more about Next.js, take a look at the following resources:
+- [@LuisRGN](https://github.com/LuisRGN)
+- [@SAlejandraOlaya](https://github.com/SAlejandraOlaya)
+- [@juanesrp](https://github.com/juanesrp)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+##Contacto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Para cualquier consulta, puedes contactarme en juanesrp@gmail.com
