@@ -156,7 +156,7 @@ const Cart = () => {
                     key={event.id}
                     className="bg-gray-50 flex flex-col  md:flex-row items-center"
                   >
-                    <td className=" md:w-1/6 p-5">
+                    <td className="max-w-sm md:w-1/6 p-5">
                       <Link href={`/concerts/${event.id}`} className="max-w-32">
                         <img src={event.imgUrl} alt="Event.image" />
                       </Link>
