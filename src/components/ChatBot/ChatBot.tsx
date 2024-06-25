@@ -175,7 +175,7 @@ const Chatbot = () => {
       </div>
       {isOpen && (
         <div
-          className="fixed bottom-20 right-5 w-[22rem] bg-gray-50 p-4 rounded-sm"
+          className="fixed bottom-20 right-5 w-[90vw] md:w-[22rem] max-[352px]:p-1 bg-gray-50 p-4 rounded-sm"
           style={{
             boxShadow:
               "0 0.1rem 0.2rem #00000033, 0 0.1rem 0.5rem #0000004d, 0 0.2rem 1.5rem #00000066",
