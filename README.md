@@ -44,7 +44,13 @@ Una lista de las tecnologías y herramientas utilizadas en el proyecto. Por ejem
 - Axios
 - PayPal SDK
 - MercadoPago SDK
-- -API googles maps
+- API googles maps
+
+##Autores
+
+- [@LuisRGN](https://github.com/LuisRGN)
+- [@SAlejandraOlaya](https://github.com/SAlejandraOlaya)
+- [@juanesrp](https://github.com/juanesrp)
 
 ##Contacto
 
